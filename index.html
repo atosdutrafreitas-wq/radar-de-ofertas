@@ -1,4 +1,12 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Achados</title>
+<meta property="og:title" content="Achados">
+<meta property="og:description" content="Curadoria de ofertas — achados da semana em Mercado Livre, Shopee e Amazon.">
+<meta property="og:url" content="https://atosdutrafreitas-wq.github.io/achados/">
 <style>
   :root{
     --paper:#EDEFE4;
@@ -143,7 +151,7 @@
   .card .price{ font-family:'Bahnschrift',sans-serif; font-weight:700; font-size:1.3rem; }
   .card .was{ text-decoration:line-through; color:var(--ink-soft); font-size:0.82rem; }
   .card .savings{ color:var(--savings); font-size:0.76rem; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.04em; }
-  .card .source{ font-size:0.72rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; }
+  .card .source{ font-size:0.72rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-top:auto; }
   .card .cta{
     margin-top:8px; display:inline-flex; justify-content:space-between; align-items:center;
     background:var(--ink); color:var(--paper);
@@ -151,6 +159,13 @@
     padding:9px 12px; text-decoration:none;
   }
   .card .cta:hover{ background:var(--tag-red); color:var(--tag-red-ink); }
+  .card .photo{ width:100%; aspect-ratio:4/3; object-fit:cover; }
+  .card .no-photo{
+    width:100%; aspect-ratio:4/3;
+    display:flex; align-items:center; justify-content:center;
+    border:1px dashed var(--rule); background:var(--paper);
+    color:var(--ink-soft); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.06em;
+  }
 
   footer{
     margin-top:44px; padding-top:18px; border-top:1px dashed var(--rule);
@@ -165,7 +180,8 @@
     .card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.12); }
   }
 </style>
-
+</head>
+<body>
 <div class="wrap">
   <div class="masthead">
     <div>
@@ -175,8 +191,8 @@
     <div class="issue">@seu.perfil<br>achados.exemplo.com</div>
   </div>
   <div class="rule-row">
-    <span>Mercado Livre &amp; Amazon</span>
-    <span>Edição de exemplo — troque pelo seu conteúdo</span>
+    <span>Mercado Livre, Shopee &amp; Amazon</span>
+    <span>Achados selecionados</span>
   </div>
 
   <div class="note">
@@ -194,88 +210,13 @@
 
   <div class="grid" id="grid">
 
-    <div class="card" data-cat="tech">
-      <span class="tag">-23%</span>
-      <span class="eyebrow">Tech</span>
-      <h3>Fone Bluetooth com Cancelamento de Ruído</h3>
-      <p class="note-line">nota de exemplo: uso todo dia no transporte, bateria dura o dia inteiro — troque por sua opinião real</p>
-      <div class="price-row">
-        <span class="price">R$ 189</span>
-        <span class="was">R$ 249</span>
-      </div>
-      <span class="savings">economia de R$ 60</span>
-      <span class="source">Amazon</span>
-      <a class="cta" href="#" title="Substitua pelo seu link de afiliado Amazon">Ver oferta <span aria-hidden="true">&rarr;</span></a>
-    </div>
-
-    <div class="card" data-cat="casa">
-      <span class="tag">-18%</span>
+    <div class="card" data-cat="casa" data-link="https://www.mercadolivre.com.br/p/MLB64186498" data-expira="2026-07-15T15:53:18.840Z">
       <span class="eyebrow">Casa</span>
-      <h3>Air Fryer 5L Antiaderente</h3>
-      <p class="note-line">nota de exemplo: essa foi a mais vendida da categoria no mês passado — troque pela sua opinião</p>
-      <div class="price-row">
-        <span class="price">R$ 329</span>
-        <span class="was">R$ 399</span>
-      </div>
-      <span class="savings">economia de R$ 70</span>
+      <div class="no-photo">sem foto</div>
+      <h3>Mercado Livre — /p/MLB64186498</h3>
+      <p class="note-line">Achado no Mercado Livre — confira preço, fotos e avaliações direto na página do produto.</p>
       <span class="source">Mercado Livre</span>
-      <a class="cta" href="#" title="Substitua pelo seu link de afiliado Mercado Livre">Ver oferta <span aria-hidden="true">&rarr;</span></a>
-    </div>
-
-    <div class="card" data-cat="casa">
-      <span class="tag">-15%</span>
-      <span class="eyebrow">Casa</span>
-      <h3>Organizador de Gaveta 8 Divisórias</h3>
-      <p class="note-line">nota de exemplo: resolveu a bagunça da gaveta de talheres aqui em casa</p>
-      <div class="price-row">
-        <span class="price">R$ 39</span>
-        <span class="was">R$ 46</span>
-      </div>
-      <span class="savings">economia de R$ 7</span>
-      <span class="source">Mercado Livre</span>
-      <a class="cta" href="#" title="Substitua pelo seu link de afiliado Mercado Livre">Ver oferta <span aria-hidden="true">&rarr;</span></a>
-    </div>
-
-    <div class="card" data-cat="beleza">
-      <span class="tag">-30%</span>
-      <span class="eyebrow">Beleza</span>
-      <h3>Escova Secadora Rotativa 4 em 1</h3>
-      <p class="note-line">nota de exemplo: substitui secador + escova + modelador — troque pela sua opinião</p>
-      <div class="price-row">
-        <span class="price">R$ 159</span>
-        <span class="was">R$ 229</span>
-      </div>
-      <span class="savings">economia de R$ 70</span>
-      <span class="source">Amazon</span>
-      <a class="cta" href="#" title="Substitua pelo seu link de afiliado Amazon">Ver oferta <span aria-hidden="true">&rarr;</span></a>
-    </div>
-
-    <div class="card" data-cat="tech">
-      <span class="tag">-12%</span>
-      <span class="eyebrow">Tech</span>
-      <h3>Garrafa Térmica 1L Inox</h3>
-      <p class="note-line">nota de exemplo: mantém gelado por 18h, testei um dia inteiro de trabalho</p>
-      <div class="price-row">
-        <span class="price">R$ 79</span>
-        <span class="was">R$ 89</span>
-      </div>
-      <span class="savings">economia de R$ 10</span>
-      <span class="source">Mercado Livre</span>
-      <a class="cta" href="#" title="Substitua pelo seu link de afiliado Mercado Livre">Ver oferta <span aria-hidden="true">&rarr;</span></a>
-    </div>
-
-    <div class="card" data-cat="bebe">
-      <span class="tag">-20%</span>
-      <span class="eyebrow">Bebê</span>
-      <h3>Kit Mordedores de Silicone (4 un.)</h3>
-      <p class="note-line">nota de exemplo: sem BPA, fácil de higienizar — troque pela sua opinião real</p>
-      <div class="price-row">
-        <span class="price">R$ 45</span>
-        <span class="was">R$ 56</span>
-      </div>
-      <span class="savings">economia de R$ 11</span>
-      <span class="source">Amazon</span>
-      <a class="cta" href="#" title="Substitua pelo seu link de afiliado Amazon">Ver oferta <span aria-hidden="true">&rarr;</span></a>
+      <a class="cta" href="https://www.mercadolivre.com.br/p/MLB64186498?pdp_filters=item_id%3AMLB4415801503&sid=cart#polycard_client=cart_list&wid=MLB4415801503&sid=cart" target="_blank" rel="noopener sponsored">Ver oferta <span aria-hidden="true">&rarr;</span></a>
     </div>
 
   </div>
@@ -304,3 +245,5 @@
     });
   });
 </script>
+</body>
+</html>
