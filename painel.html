@@ -122,6 +122,12 @@
     </section>
 
     <section class="bloco">
+      <h2>Cliques recentes (quando e onde)</h2>
+      <p class="subtitulo" style="margin-bottom:12px;">Hora exata de cada clique. "Onde" (região de quem clicou) fica no Google Analytics — link na seção de audiência, mais abaixo.</p>
+      <div id="lista-cliques-recentes"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
       <h2>Termos mais buscados</h2>
       <div id="lista-buscas"><div class="vazio">Carregando...</div></div>
     </section>
@@ -166,6 +172,7 @@
   const listaPendentes = document.getElementById('lista-pendentes');
   const listaLembretes = document.getElementById('lista-lembretes');
   const listaCliques = document.getElementById('lista-cliques');
+  const listaCliquesRecentes = document.getElementById('lista-cliques-recentes');
   const listaBuscas = document.getElementById('lista-buscas');
   const listaBuscasVazias = document.getElementById('lista-buscas-vazias');
   const listaUpgrades = document.getElementById('lista-upgrades');
@@ -298,6 +305,20 @@
           listaCliques.appendChild(linha);
         });
     }
+
+    // --- Cliques recentes, hora exata (quando) ---
+    function formatExato(ts) {
+      if (!ts || !ts.toDate) return '—';
+      return ts.toDate().toLocaleString('pt-BR', { dateStyle: 'short', timeStyle: 'short' });
+    }
+    const porParceiroId = Object.fromEntries(parceiros.map(p => [p.id, p.nome]));
+    const recentes = [...cliques]
+      .filter(c => c.ts && c.ts.toDate)
+      .sort((a, b) => b.ts.toDate() - a.ts.toDate())
+      .slice(0, 50);
+    listaCliquesRecentes.innerHTML = recentes.length
+      ? recentes.map(c => `<div class="card-pendente">${formatExato(c.ts)} — ${porParceiroId[c.parceiroId] || c.parceiroId}</div>`).join('')
+      : '<div class="vazio">Nenhum clique registrado ainda.</div>';
 
     // --- Lembretes ---
     const lembretes = [];
