@@ -2,7 +2,7 @@
 // depois de "Aceitar" — nunca antes. Preencha GA_MEASUREMENT_ID quando o GA4 estiver
 // vinculado ao projeto Firebase (ver painel v2); ate la, so registra a preferencia.
 (function () {
-  var GA_MEASUREMENT_ID = ''; // ex: 'G-XXXXXXXXXX'
+  var GA_MEASUREMENT_ID = 'G-9VZKLZRNXG';
   var CHAVE = 'radar-consent';
 
   function carregarAnalytics() {

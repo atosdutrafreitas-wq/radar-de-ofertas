@@ -100,10 +100,18 @@
     <button class="btn-sair" id="botao-sair" style="margin-bottom:24px;">Sair</button>
 
     <section class="bloco">
-      <h2>Fila de produtos orgânicos</h2>
-      <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/achados/tree/main/fila" target="_blank" rel="noopener">
-        Abrir pasta fila/ no GitHub &rarr;
-      </a>
+      <h2>Atalhos</h2>
+      <div style="display:flex; flex-wrap:wrap; gap:10px;">
+        <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/achados/edit/main/index.html" target="_blank" rel="noopener">Publicar / editar site (GitHub) &rarr;</a>
+        <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/achados/tree/main/fila" target="_blank" rel="noopener">Fila de produtos &rarr;</a>
+        <a class="atalho-fila" href="https://console.firebase.google.com/project/radar-de-ofertas-2026/firestore/data" target="_blank" rel="noopener">Dados brutos (Firestore) &rarr;</a>
+        <a class="atalho-fila" href="https://console.firebase.google.com/project/radar-de-ofertas-2026/analytics" target="_blank" rel="noopener">Analisar dados (Analytics) &rarr;</a>
+      </div>
+    </section>
+
+    <section class="bloco">
+      <h2>Parceiros cadastrados</h2>
+      <div id="lista-parceiros"><div class="vazio">Carregando...</div></div>
     </section>
 
     <section class="bloco">
@@ -173,6 +181,7 @@
   const listaLembretes = document.getElementById('lista-lembretes');
   const listaCliques = document.getElementById('lista-cliques');
   const listaCliquesRecentes = document.getElementById('lista-cliques-recentes');
+  const listaParceiros = document.getElementById('lista-parceiros');
   const listaBuscas = document.getElementById('lista-buscas');
   const listaBuscasVazias = document.getElementById('lista-buscas-vazias');
   const listaUpgrades = document.getElementById('lista-upgrades');
@@ -279,6 +288,7 @@
     const parceiros = parceirosSnap.docs.map(d => ({ id: d.id, ...d.data() }));
     const anuncios = anunciosSnap.docs.map(d => d.data());
     const cliques = cliquesSnap.docs.map(d => d.data());
+    const agora = Date.now();
 
     // --- Cliques por parceiro (total, mes atual, mes anterior) ---
     const mesAtual = mesAnoAtual(0);
@@ -306,6 +316,21 @@
         });
     }
 
+    // --- Parceiros cadastrados (visao geral / configuracao) ---
+    listaParceiros.innerHTML = parceiros.length
+      ? parceiros.map(p => {
+          let trialTxt = '—';
+          if (p.plano === 'gratis' && p.trialExpiraEm) {
+            const expira = p.trialExpiraEm.toDate ? p.trialExpiraEm.toDate() : new Date(p.trialExpiraEm);
+            const dias = Math.round((expira.getTime() - agora) / 86400000);
+            trialTxt = dias < 0 ? `trial expirado há ${Math.abs(dias)}d` : `trial expira em ${dias}d`;
+          } else if (p.plano === 'pago') {
+            trialTxt = 'plano pago';
+          }
+          return `<div class="card-pendente"><h3>${p.nome}</h3><p>${p.tipo} · ${p.contato} · ${trialTxt}</p></div>`;
+        }).join('')
+      : '<div class="vazio">Nenhum parceiro cadastrado ainda.</div>';
+
     // --- Cliques recentes, hora exata (quando) ---
     function formatExato(ts) {
       if (!ts || !ts.toDate) return '—';
@@ -322,7 +347,6 @@
 
     // --- Lembretes ---
     const lembretes = [];
-    const agora = Date.now();
 
     parceiros.forEach(p => {
       if (p.plano === 'gratis' && p.trialExpiraEm) {
