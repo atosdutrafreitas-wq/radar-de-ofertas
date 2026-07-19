@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cadastre-se — Radar de Ofertas</title>
+<meta property="og:title" content="Cadastre-se — Radar de Ofertas">
+<meta property="og:description" content="Cadastre sua loja ou serviço local no Radar de Ofertas — 3 publicações grátis por semana.">
+<meta property="og:url" content="https://atosdutrafreitas-wq.github.io/achados/cadastro-anunciante.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B0E13">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  :root{
+    --paper:#0B0E13;
+    --paper-raised:#12161E;
+    --ink:#E9EEF3;
+    --ink-soft:#8D98A8;
+    --rule:#232B36;
+    --tag-red:#FF2E7A;
+    --tag-red-ink:#1A0410;
+    --gold:#22E6C8;
+    --savings:#39FF88;
+    --focus:#5B8CFF;
+    --font-mono:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:'Calibri','Segoe UI',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{
+    font-family:'Bahnschrift','Arial Narrow',sans-serif;
+    font-variation-settings:'wght' 700, 'wdth' 85;
+    letter-spacing:0.01em;
+  }
+  a{color:inherit;}
+  :focus-visible{outline:3px solid var(--focus); outline-offset:2px;}
+
+  .wrap{max-width:960px; margin:0 auto; padding:28px 20px 60px;}
+
+  .masthead{
+    position:relative;
+    display:flex; justify-content:space-between; align-items:flex-end;
+    border-bottom:4px solid var(--ink);
+    padding:22px 26px 14px; margin-bottom:6px;
+    gap:16px; flex-wrap:wrap;
+  }
+  .masthead h1{
+    font-size:clamp(2.4rem,7vw,4.2rem);
+    margin:0; text-transform:uppercase;
+    text-wrap:balance;
+    line-height:0.9;
+  }
+  .masthead .kicker{
+    font-family:var(--font-mono);
+    text-transform:uppercase; letter-spacing:0.1em; font-size:0.72rem;
+    color:var(--gold); margin-bottom:8px;
+  }
+  .masthead .issue{
+    text-align:right; font-size:0.85rem; color:var(--ink-soft);
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em;
+  }
+  .frame{
+    position:absolute; width:16px; height:16px; border:2px solid var(--gold); opacity:0.6;
+  }
+  .frame.tl{ top:6px; left:6px; border-right:none; border-bottom:none; }
+  .frame.tr{ top:6px; right:6px; border-left:none; border-bottom:none; }
+  .status-radar{
+    display:inline-flex; align-items:center; gap:6px; margin-top:6px;
+    font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.06em;
+    font-size:0.68rem; color:var(--ink-soft);
+  }
+  .status-radar .ponto{
+    width:7px; height:7px; border-radius:50%; background:var(--savings);
+    box-shadow:0 0 8px var(--savings); animation:pulso-radar 2s ease-in-out infinite;
+  }
+  @keyframes pulso-radar{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+  @media (prefers-reduced-motion:reduce){ .status-radar .ponto{ animation:none; } }
+  .rule-row{
+    display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft);
+    padding:8px 0 20px; border-bottom:1px dashed var(--rule);
+    margin-bottom:22px;
+  }
+
+  .page{
+    background:var(--paper-raised);
+    border:1px solid var(--rule);
+    padding:24px 26px;
+    max-width:560px;
+  }
+  .page h2{
+    font-family:'Bahnschrift',sans-serif;
+    text-transform:uppercase; letter-spacing:0.06em;
+    font-size:1.3rem; margin:0 0 14px;
+  }
+  .page p{ line-height:1.6; margin:0 0 14px; color:var(--ink); }
+  .page .lede{ color:var(--ink-soft); font-style:italic; }
+
+  form{ display:flex; flex-direction:column; gap:16px; }
+  fieldset{ border:none; padding:0; margin:0; display:flex; gap:10px; }
+  fieldset legend{
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.06em;
+    font-size:0.78rem; color:var(--ink-soft); padding:0; margin-bottom:8px; width:100%;
+  }
+  .tipo-opcoes{ display:flex; gap:10px; width:100%; }
+  .tipo-opcoes label{
+    flex:1; text-align:center; cursor:pointer;
+    border:1.5px solid var(--rule); padding:10px; border-radius:2px;
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; font-size:0.78rem; letter-spacing:0.04em;
+  }
+  .tipo-opcoes input{ position:absolute; opacity:0; pointer-events:none; }
+  .tipo-opcoes input:checked + span{ color:var(--paper); }
+  .tipo-opcoes label:has(input:checked){ background:var(--gold); border-color:var(--gold); color:var(--paper); }
+
+  label.campo{ display:flex; flex-direction:column; gap:6px; font-size:0.85rem; color:var(--ink-soft); }
+  label.campo span.rotulo{
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
+  }
+  input[type="text"], input[type="url"], input[type="tel"], textarea, select{
+    background:var(--paper); border:1.5px solid var(--rule); color:var(--ink);
+    padding:10px 12px; font-size:0.95rem; font-family:inherit; border-radius:2px;
+  }
+  textarea{ resize:vertical; min-height:80px; }
+  .campo-endereco{ display:none; }
+  .campo-endereco.visivel{ display:flex; }
+
+  .checkbox-linha{ display:flex; align-items:flex-start; gap:8px; font-size:0.82rem; color:var(--ink-soft); }
+  .checkbox-linha input{ margin-top:3px; }
+
+  button[type="submit"]{
+    margin-top:8px;
+    background:var(--gold); color:var(--paper); border:none;
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.85rem;
+    padding:12px; cursor:pointer; border-radius:2px;
+    transition:transform 180ms ease, box-shadow 180ms ease;
+  }
+  button[type="submit"]:hover:not(:disabled), button[type="submit"]:focus-visible:not(:disabled){
+    box-shadow:0 0 16px rgba(34,230,200,0.5);
+    transform:translateY(-2px);
+  }
+  button[type="submit"]:disabled{ opacity:0.6; cursor:default; }
+
+  .mensagem{ font-size:0.88rem; padding:12px 14px; border-radius:2px; display:none; }
+  .mensagem.visivel{ display:block; }
+  .mensagem.sucesso{ background:rgba(57,255,136,0.12); border:1px solid var(--savings); color:var(--savings); }
+  .mensagem.erro{ background:rgba(255,46,122,0.12); border:1px solid var(--tag-red); color:var(--tag-red); }
+
+  footer{
+    margin-top:44px; padding-top:18px; border-top:1px dashed var(--rule);
+    display:flex; flex-direction:column; gap:14px;
+    font-size:0.78rem; color:var(--ink-soft);
+  }
+  footer .site-nav{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; }
+  footer .site-nav a{ text-decoration:none; border-bottom:1px solid var(--rule); }
+  footer .site-nav a.cta-pill{
+    display:inline-flex; align-items:center;
+    border:1.5px solid var(--tag-red); color:var(--tag-red);
+    padding:5px 14px; border-radius:999px;
+    text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
+    font-family:'Bahnschrift',sans-serif;
+  }
+  footer .bottom-row{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
+  footer .social{ display:flex; align-items:center; gap:12px; }
+  footer .social a{ display:inline-flex; color:var(--ink-soft); text-decoration:none; }
+  footer .social svg{ width:18px; height:18px; fill:currentColor; }
+  .disclosure{ max-width:640px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="masthead">
+    <div class="frame tl"></div>
+    <div class="frame tr"></div>
+    <div>
+      <div class="kicker">// curadoria de ofertas &middot; achados da semana</div>
+      <h1 class="display">RADAR DE OFERTAS</h1>
+    </div>
+    <div style="text-align:right;">
+      <div class="issue">por Atos Freitas</div>
+      <div class="status-radar"><span class="ponto"></span>radar ativo</div>
+    </div>
+  </div>
+  <div class="rule-row">
+    <span>Mercado Livre, Shopee &amp; Amazon</span>
+    <span>Cadastro de Parceiro</span>
+  </div>
+
+  <div class="page">
+    <h2>Cadastre sua loja ou serviço</h2>
+    <p class="lede">3 publicações grátis por semana — sem cartão, sem compromisso.</p>
+    <p>Todo cadastro passa por uma revisão rápida antes de ir ao ar. Preencha os campos abaixo:</p>
+
+    <form id="form-cadastro">
+      <fieldset>
+        <legend>Você é</legend>
+        <div class="tipo-opcoes">
+          <label><input type="radio" name="tipo" value="produto" checked><span>Loja / Produto</span></label>
+          <label><input type="radio" name="tipo" value="servico"><span>Prestador de Serviço</span></label>
+        </div>
+      </fieldset>
+
+      <label class="campo">
+        <span class="rotulo">Nome do negócio</span>
+        <input type="text" name="nome" required maxlength="199">
+      </label>
+
+      <label class="campo">
+        <span class="rotulo">Contato (WhatsApp ou e-mail)</span>
+        <input type="text" name="contato" required maxlength="199" placeholder="(11) 99999-9999 ou email@exemplo.com">
+      </label>
+
+      <label class="campo campo-endereco" id="campo-endereco">
+        <span class="rotulo">Endereço (necessário pra prestador de serviço aparecer por distância)</span>
+        <input type="text" name="endereco" id="input-endereco" maxlength="300">
+      </label>
+
+      <label class="campo">
+        <span class="rotulo">Texto do anúncio</span>
+        <textarea name="texto" required maxlength="1999" placeholder="Descreva a oferta ou o serviço"></textarea>
+      </label>
+
+      <label class="campo">
+        <span class="rotulo">Link (site, WhatsApp ou rede social)</span>
+        <input type="url" name="link" required maxlength="500" placeholder="https://...">
+      </label>
+
+      <label class="campo">
+        <span class="rotulo">Link de uma foto (opcional)</span>
+        <input type="url" name="fotoUrl" maxlength="500" placeholder="https://...">
+      </label>
+
+      <label class="campo">
+        <span class="rotulo">Duração da publicação</span>
+        <select name="duracaoDias">
+          <option value="3">3 dias</option>
+          <option value="7" selected>7 dias</option>
+          <option value="14">14 dias</option>
+          <option value="30">30 dias</option>
+        </select>
+      </label>
+
+      <label class="checkbox-linha">
+        <input type="checkbox" name="quereUpgrade">
+        <span>Já uso bastante e quero conversar sobre o plano pago (alguém entra em contato com você)</span>
+      </label>
+
+      <button type="submit" id="botao-enviar">Enviar cadastro</button>
+      <div class="mensagem" id="mensagem"></div>
+    </form>
+  </div>
+
+  <footer>
+    <nav class="site-nav">
+      <a href="index.html">Ofertas</a>
+      <a href="servicos.html">Serviços</a>
+      <a href="sobre.html">Sobre</a>
+      <a href="anuncie.html">Anuncie Aqui</a>
+      <a href="contato.html">Contato</a>
+      <a href="politica-afiliados.html">Política de Afiliados</a>
+      <a href="privacidade.html">Privacidade</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="bottom-row">
+      <div class="disclosure">
+        Como afiliado, ganho comissão sobre compras qualificadas feitas através dos meus links, sem custo adicional para você.
+      </div>
+      <div class="social">
+        <a href="https://www.instagram.com/radar_ofertass2026/" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.2c-2.7 0-3 .01-4.05.06-1.05.05-1.77.22-2.4.46-.65.25-1.2.6-1.75 1.15-.55.55-.9 1.1-1.15 1.75-.24.63-.41 1.35-.46 2.4C2.14 9 2.13 9.3 2.13 12s.01 3 .06 4.05c.05 1.05.22 1.77.46 2.4.25.65.6 1.2 1.15 1.75.55.55 1.1.9 1.75 1.15.63.24 1.35.41 2.4.46 1.05.05 1.35.06 4.05.06s3-.01 4.05-.06c1.05-.05 1.77-.22 2.4-.46.65-.25 1.2-.6 1.75-1.15.55-.55.9-1.1 1.15-1.75.24-.63.41-1.35.46-2.4.05-1.05.06-1.35.06-4.05s-.01-3-.06-4.05c-.05-1.05-.22-1.77-.46-2.4-.25-.65-.6-1.2-1.15-1.75-.55-.55-1.1-.9-1.75-1.15-.63-.24-1.35-.41-2.4-.46C15 2.21 14.7 2.2 12 2.2zm0 1.8c2.65 0 2.97.01 4.02.06.97.04 1.5.2 1.85.34.47.18.8.4 1.15.75.35.35.57.68.75 1.15.14.35.3.88.34 1.85.05 1.05.06 1.37.06 4.02s-.01 2.97-.06 4.02c-.04.97-.2 1.5-.34 1.85-.18.47-.4.8-.75 1.15-.35.35-.68.57-1.15.75-.35.14-.88.3-1.85.34-1.05.05-1.36.06-4.02.06s-2.97-.01-4.02-.06c-.97-.04-1.5-.2-1.85-.34-.47-.18-.8-.4-1.15-.75-.35-.35-.57-.68-.75-1.15-.14-.35-.3-.88-.34-1.85C3.99 14.97 3.98 14.65 3.98 12s.01-2.97.06-4.02c.04-.97.2-1.5.34-1.85.18-.47.4-.8.75-1.15.35-.35.68-.57 1.15-.75.35-.14.88-.3 1.85-.34C9.03 4.01 9.35 4 12 4zm0 3.05a4.95 4.95 0 1 0 0 9.9 4.95 4.95 0 0 0 0-9.9zm0 8.17a3.22 3.22 0 1 1 0-6.44 3.22 3.22 0 0 1 0 6.44zm6.3-8.36a1.16 1.16 0 1 1-2.31 0 1.16 1.16 0 0 1 2.31 0z"/></svg></a>
+        <a href="contato.html" title="TikTok em breve" aria-label="TikTok em breve"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.5 2h-3.1v13.4c0 1.3-1.05 2.35-2.35 2.35a2.35 2.35 0 0 1-2.35-2.35c0-1.3 1.05-2.35 2.35-2.35.26 0 .5.04.74.11v-3.2a5.5 5.5 0 0 0-.74-.05A5.55 5.55 0 0 0 5.5 15.4 5.55 5.55 0 0 0 11.05 21a5.55 5.55 0 0 0 5.55-5.6V8.9a8.1 8.1 0 0 0 4.7 1.5V7.3a4.85 4.85 0 0 1-2.6-.86A4.9 4.9 0 0 1 16.5 2z"/></svg></a>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getFirestore, collection, query, where, limit, getDocs, addDoc, serverTimestamp
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { firebaseConfig } from "./firebase-config.js";
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  const form = document.getElementById('form-cadastro');
+  const campoEndereco = document.getElementById('campo-endereco');
+  const inputEndereco = document.getElementById('input-endereco');
+  const botao = document.getElementById('botao-enviar');
+  const mensagem = document.getElementById('mensagem');
+
+  function atualizarCampoEndereco() {
+    const tipo = form.querySelector('input[name="tipo"]:checked').value;
+    const ehServico = tipo === 'servico';
+    campoEndereco.classList.toggle('visivel', ehServico);
+    inputEndereco.required = ehServico;
+  }
+  form.querySelectorAll('input[name="tipo"]').forEach(r => r.addEventListener('change', atualizarCampoEndereco));
+  atualizarCampoEndereco();
+
+  function mesAnoAtual() {
+    const d = new Date();
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  }
+
+  async function geocodificar(endereco) {
+    try {
+      const url = 'https://nominatim.openstreetmap.org/search?format=json&limit=1&q=' + encodeURIComponent(endereco);
+      const res = await fetch(url, { headers: { 'Accept': 'application/json' } });
+      if (!res.ok) throw new Error('geocode falhou');
+      const dados = await res.json();
+      if (!dados.length) return { lat: null, lng: null, geocodeStatus: 'falhou' };
+      return { lat: parseFloat(dados[0].lat), lng: parseFloat(dados[0].lon), geocodeStatus: 'ok' };
+    } catch (e) {
+      return { lat: null, lng: null, geocodeStatus: 'falhou' };
+    }
+  }
+
+  function mostrarMensagem(texto, tipo) {
+    mensagem.textContent = texto;
+    mensagem.className = 'mensagem visivel ' + tipo;
+  }
+
+  form.addEventListener('submit', async (ev) => {
+    ev.preventDefault();
+    botao.disabled = true;
+    botao.textContent = 'Enviando...';
+    mensagem.className = 'mensagem';
+
+    try {
+      const dados = new FormData(form);
+      const tipo = dados.get('tipo');
+      const nome = dados.get('nome').trim();
+      const contato = dados.get('contato').trim();
+      const endereco = (dados.get('endereco') || '').trim();
+      const texto = dados.get('texto').trim();
+      const link = dados.get('link').trim();
+      const fotoUrl = (dados.get('fotoUrl') || '').trim() || null;
+      const duracaoDias = parseInt(dados.get('duracaoDias'), 10);
+      const quereUpgrade = dados.get('quereUpgrade') === 'on';
+
+      let geo = { lat: null, lng: null, geocodeStatus: 'pendente' };
+      if (tipo === 'servico') {
+        geo = await geocodificar(endereco);
+      }
+
+      // Reaproveita o parceiro se o mesmo contato ja se cadastrou antes.
+      let parceiroId;
+      const parceirosRef = collection(db, 'parceiros');
+      const jaExiste = await getDocs(query(parceirosRef, where('contato', '==', contato), limit(1)));
+      if (!jaExiste.empty) {
+        parceiroId = jaExiste.docs[0].id;
+      } else {
+        const TRES_MESES_MS = 90 * 86400000;
+        const novoParceiro = await addDoc(parceirosRef, {
+          tipo, nome, contato,
+          endereco: tipo === 'servico' ? endereco : null,
+          lat: geo.lat, lng: geo.lng, geocodeStatus: geo.geocodeStatus,
+          plano: 'gratis',
+          trialExpiraEm: new Date(Date.now() + TRES_MESES_MS), // 3 meses de vagas gratis
+          criadoEm: serverTimestamp()
+        });
+        parceiroId = novoParceiro.id;
+      }
+
+      await addDoc(collection(db, 'anuncios'), {
+        parceiroId, texto, link, duracaoDias,
+        fotoUrl,
+        criadoEm: serverTimestamp(),
+        expiraEm: new Date(Date.now() + duracaoDias * 86400000),
+        status: 'pendente'
+      });
+
+      if (quereUpgrade) {
+        await addDoc(collection(db, 'pedidosUpgrade'), {
+          parceiroId, contato, ts: serverTimestamp()
+        });
+      }
+
+      form.reset();
+      atualizarCampoEndereco();
+      mostrarMensagem('Recebido! Seu anúncio entrou em análise e deve aparecer no site em breve.', 'sucesso');
+    } catch (erro) {
+      console.error(erro);
+      mostrarMensagem('Não deu pra enviar agora. Tenta de novo em alguns instantes ou fala com a gente pela página de Contato.', 'erro');
+    } finally {
+      botao.disabled = false;
+      botao.textContent = 'Enviar cadastro';
+    }
+  });
+</script>
+<script src="cookie-consent.js"></script>
+</body>
+</html>

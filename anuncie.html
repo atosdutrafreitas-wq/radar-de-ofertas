@@ -3,10 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Anuncie Aqui — Achados</title>
-<meta property="og:title" content="Anuncie Aqui — Achados">
-<meta property="og:description" content="Divulgue sua marca no Achados — conteúdo patrocinado sempre identificado.">
+<title>Anuncie Aqui — Radar de Ofertas</title>
+<meta property="og:title" content="Anuncie Aqui — Radar de Ofertas">
+<meta property="og:description" content="Divulgue sua marca no Radar de Ofertas — conteúdo patrocinado sempre identificado.">
 <meta property="og:url" content="https://atosdutrafreitas-wq.github.io/achados/anuncie.html">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#0B0E13">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
 <style>
   :root{
     --paper:#0B0E13;
@@ -19,6 +22,7 @@
     --gold:#22E6C8;
     --savings:#39FF88;
     --focus:#5B8CFF;
+    --font-mono:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
   }
 
   *{box-sizing:border-box;}
@@ -41,9 +45,10 @@
 
   /* masthead */
   .masthead{
+    position:relative;
     display:flex; justify-content:space-between; align-items:flex-end;
     border-bottom:4px solid var(--ink);
-    padding-bottom:14px; margin-bottom:6px;
+    padding:22px 26px 14px; margin-bottom:6px;
     gap:16px; flex-wrap:wrap;
   }
   .masthead h1{
@@ -53,15 +58,30 @@
     line-height:0.9;
   }
   .masthead .kicker{
-    font-family:'Bahnschrift',sans-serif;
-    font-variation-settings:'wght' 600,'wdth' 100;
-    text-transform:uppercase; letter-spacing:0.16em; font-size:0.72rem;
-    color:var(--ink-soft); margin-bottom:6px;
+    font-family:var(--font-mono);
+    text-transform:uppercase; letter-spacing:0.1em; font-size:0.72rem;
+    color:var(--gold); margin-bottom:8px;
   }
   .masthead .issue{
     text-align:right; font-size:0.85rem; color:var(--ink-soft);
     font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em;
   }
+  .frame{
+    position:absolute; width:16px; height:16px; border:2px solid var(--gold); opacity:0.6;
+  }
+  .frame.tl{ top:6px; left:6px; border-right:none; border-bottom:none; }
+  .frame.tr{ top:6px; right:6px; border-left:none; border-bottom:none; }
+  .status-radar{
+    display:inline-flex; align-items:center; gap:6px; margin-top:6px;
+    font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.06em;
+    font-size:0.68rem; color:var(--ink-soft);
+  }
+  .status-radar .ponto{
+    width:7px; height:7px; border-radius:50%; background:var(--savings);
+    box-shadow:0 0 8px var(--savings); animation:pulso-radar 2s ease-in-out infinite;
+  }
+  @keyframes pulso-radar{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
+  @media (prefers-reduced-motion:reduce){ .status-radar .ponto{ animation:none; } }
   .rule-row{
     display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft);
     padding:8px 0 20px; border-bottom:1px dashed var(--rule);
@@ -123,11 +143,16 @@
 <body>
 <div class="wrap">
   <div class="masthead">
+    <div class="frame tl"></div>
+    <div class="frame tr"></div>
     <div>
-      <div class="kicker">Curadoria de ofertas &middot; achados da semana</div>
-      <h1 class="display">ACHADOS</h1>
+      <div class="kicker">// curadoria de ofertas &middot; achados da semana</div>
+      <h1 class="display">RADAR DE OFERTAS</h1>
     </div>
-    <div class="issue">atosdutrafreitas-wq.github.io/achados</div>
+    <div style="text-align:right;">
+      <div class="issue">por Atos Freitas</div>
+      <div class="status-radar"><span class="ponto"></span>radar ativo</div>
+    </div>
   </div>
   <div class="rule-row">
     <span>Mercado Livre, Shopee &amp; Amazon</span>
@@ -137,14 +162,16 @@
   <div class="page">
     <h2>Anuncie Aqui</h2>
     <p class="lede">Sua marca na frente de quem está caçando a próxima boa oferta.</p>
-    <p>O Achados abre espaço para marcas e lojas interessadas em divulgar produtos, promoções ou lançamentos para uma audiência que já está no clima de comprar bem.</p>
+    <p>O Radar de Ofertas abre espaço para marcas e lojas interessadas em divulgar produtos, promoções ou lançamentos para uma audiência que já está no clima de comprar bem.</p>
     <p>Todo conteúdo pago é identificado de forma clara e visível como <span class="tag-inline">Publicidade</span> ou <span class="tag-inline">Conteúdo Patrocinado</span> — nunca misturado aos achados de curadoria orgânica. Essa é uma regra fixa do site, sem exceções.</p>
     <p>Não trabalhamos com tabela fixa de preços — cada proposta é avaliada conforme o formato e o alcance desejado. Se você tem interesse em divulgar algo por aqui, entre em contato pela página de <a href="contato.html">Contato</a> e vamos conversar.</p>
+    <p><strong>Loja ou prestador de serviço local?</strong> Você pode se cadastrar agora mesmo e publicar suas primeiras 3 ofertas por semana grátis — <a href="cadastro-anunciante.html">cadastre-se aqui</a>.</p>
   </div>
 
   <footer>
     <nav class="site-nav">
       <a href="index.html">Ofertas</a>
+      <a href="servicos.html">Serviços</a>
       <a href="sobre.html">Sobre</a>
       <a href="contato.html">Contato</a>
       <a href="politica-afiliados.html">Política de Afiliados</a>
@@ -156,11 +183,12 @@
         Como afiliado, ganho comissão sobre compras qualificadas feitas através dos meus links, sem custo adicional para você.
       </div>
       <div class="social">
-        <a href="contato.html" title="Instagram em breve" aria-label="Instagram em breve"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.2c-2.7 0-3 .01-4.05.06-1.05.05-1.77.22-2.4.46-.65.25-1.2.6-1.75 1.15-.55.55-.9 1.1-1.15 1.75-.24.63-.41 1.35-.46 2.4C2.14 9 2.13 9.3 2.13 12s.01 3 .06 4.05c.05 1.05.22 1.77.46 2.4.25.65.6 1.2 1.15 1.75.55.55 1.1.9 1.75 1.15.63.24 1.35.41 2.4.46 1.05.05 1.35.06 4.05.06s3-.01 4.05-.06c1.05-.05 1.77-.22 2.4-.46.65-.25 1.2-.6 1.75-1.15.55-.55.9-1.1 1.15-1.75.24-.63.41-1.35.46-2.4.05-1.05.06-1.35.06-4.05s-.01-3-.06-4.05c-.05-1.05-.22-1.77-.46-2.4-.25-.65-.6-1.2-1.15-1.75-.55-.55-1.1-.9-1.75-1.15-.63-.24-1.35-.41-2.4-.46C15 2.21 14.7 2.2 12 2.2zm0 1.8c2.65 0 2.97.01 4.02.06.97.04 1.5.2 1.85.34.47.18.8.4 1.15.75.35.35.57.68.75 1.15.14.35.3.88.34 1.85.05 1.05.06 1.37.06 4.02s-.01 2.97-.06 4.02c-.04.97-.2 1.5-.34 1.85-.18.47-.4.8-.75 1.15-.35.35-.68.57-1.15.75-.35.14-.88.3-1.85.34-1.05.05-1.36.06-4.02.06s-2.97-.01-4.02-.06c-.97-.04-1.5-.2-1.85-.34-.47-.18-.8-.4-1.15-.75-.35-.35-.57-.68-.75-1.15-.14-.35-.3-.88-.34-1.85C3.99 14.97 3.98 14.65 3.98 12s.01-2.97.06-4.02c.04-.97.2-1.5.34-1.85.18-.47.4-.8.75-1.15.35-.35.68-.57 1.15-.75.35-.14.88-.3 1.85-.34C9.03 4.01 9.35 4 12 4zm0 3.05a4.95 4.95 0 1 0 0 9.9 4.95 4.95 0 0 0 0-9.9zm0 8.17a3.22 3.22 0 1 1 0-6.44 3.22 3.22 0 0 1 0 6.44zm6.3-8.36a1.16 1.16 0 1 1-2.31 0 1.16 1.16 0 0 1 2.31 0z"/></svg></a>
+        <a href="https://www.instagram.com/radar_ofertass2026/" target="_blank" rel="noopener" title="Instagram" aria-label="Instagram"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2.2c-2.7 0-3 .01-4.05.06-1.05.05-1.77.22-2.4.46-.65.25-1.2.6-1.75 1.15-.55.55-.9 1.1-1.15 1.75-.24.63-.41 1.35-.46 2.4C2.14 9 2.13 9.3 2.13 12s.01 3 .06 4.05c.05 1.05.22 1.77.46 2.4.25.65.6 1.2 1.15 1.75.55.55 1.1.9 1.75 1.15.63.24 1.35.41 2.4.46 1.05.05 1.35.06 4.05.06s3-.01 4.05-.06c1.05-.05 1.77-.22 2.4-.46.65-.25 1.2-.6 1.75-1.15.55-.55.9-1.1 1.15-1.75.24-.63.41-1.35.46-2.4.05-1.05.06-1.35.06-4.05s-.01-3-.06-4.05c-.05-1.05-.22-1.77-.46-2.4-.25-.65-.6-1.2-1.15-1.75-.55-.55-1.1-.9-1.75-1.15-.63-.24-1.35-.41-2.4-.46C15 2.21 14.7 2.2 12 2.2zm0 1.8c2.65 0 2.97.01 4.02.06.97.04 1.5.2 1.85.34.47.18.8.4 1.15.75.35.35.57.68.75 1.15.14.35.3.88.34 1.85.05 1.05.06 1.37.06 4.02s-.01 2.97-.06 4.02c-.04.97-.2 1.5-.34 1.85-.18.47-.4.8-.75 1.15-.35.35-.68.57-1.15.75-.35.14-.88.3-1.85.34-1.05.05-1.36.06-4.02.06s-2.97-.01-4.02-.06c-.97-.04-1.5-.2-1.85-.34-.47-.18-.8-.4-1.15-.75-.35-.35-.57-.68-.75-1.15-.14-.35-.3-.88-.34-1.85C3.99 14.97 3.98 14.65 3.98 12s.01-2.97.06-4.02c.04-.97.2-1.5.34-1.85.18-.47.4-.8.75-1.15.35-.35.68-.57 1.15-.75.35-.14.88-.3 1.85-.34C9.03 4.01 9.35 4 12 4zm0 3.05a4.95 4.95 0 1 0 0 9.9 4.95 4.95 0 0 0 0-9.9zm0 8.17a3.22 3.22 0 1 1 0-6.44 3.22 3.22 0 0 1 0 6.44zm6.3-8.36a1.16 1.16 0 1 1-2.31 0 1.16 1.16 0 0 1 2.31 0z"/></svg></a>
         <a href="contato.html" title="TikTok em breve" aria-label="TikTok em breve"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M16.5 2h-3.1v13.4c0 1.3-1.05 2.35-2.35 2.35a2.35 2.35 0 0 1-2.35-2.35c0-1.3 1.05-2.35 2.35-2.35.26 0 .5.04.74.11v-3.2a5.5 5.5 0 0 0-.74-.05A5.55 5.55 0 0 0 5.5 15.4 5.55 5.55 0 0 0 11.05 21a5.55 5.55 0 0 0 5.55-5.6V8.9a8.1 8.1 0 0 0 4.7 1.5V7.3a4.85 4.85 0 0 1-2.6-.86A4.9 4.9 0 0 1 16.5 2z"/></svg></a>
       </div>
     </div>
   </footer>
 </div>
+<script src="cookie-consent.js"></script>
 </body>
 </html>

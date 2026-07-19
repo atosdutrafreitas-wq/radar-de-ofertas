@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>Painel — Radar de Ofertas</title>
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<style>
+  :root{
+    --paper:#0B0E13;
+    --paper-raised:#12161E;
+    --ink:#E9EEF3;
+    --ink-soft:#8D98A8;
+    --rule:#232B36;
+    --tag-red:#FF2E7A;
+    --tag-red-ink:#1A0410;
+    --gold:#22E6C8;
+    --savings:#39FF88;
+    --focus:#5B8CFF;
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:'Calibri','Segoe UI',system-ui,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .display{ font-family:'Bahnschrift','Arial Narrow',sans-serif; font-variation-settings:'wght' 700, 'wdth' 85; }
+  a{ color:inherit; }
+  :focus-visible{ outline:3px solid var(--focus); outline-offset:2px; }
+  .wrap{ max-width:780px; margin:0 auto; padding:28px 20px 60px; }
+  h1.display{ font-size:1.8rem; text-transform:uppercase; margin:0 0 4px; }
+  .subtitulo{ color:var(--ink-soft); font-size:0.85rem; margin-bottom:26px; }
+
+  .painel-login{
+    background:var(--paper-raised); border:1px solid var(--rule); padding:24px 26px; max-width:360px;
+    display:flex; flex-direction:column; gap:14px;
+  }
+  .painel-login label{ display:flex; flex-direction:column; gap:6px; font-size:0.85rem; color:var(--ink-soft); }
+  input[type="email"], input[type="password"]{
+    background:var(--paper); border:1.5px solid var(--rule); color:var(--ink);
+    padding:10px 12px; font-size:0.95rem; border-radius:2px;
+  }
+  button{
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.8rem;
+    padding:10px 14px; border-radius:2px; cursor:pointer; border:none;
+  }
+  .btn-principal{ background:var(--gold); color:var(--paper); }
+  .btn-aprovar{ background:var(--savings); color:var(--tag-red-ink); }
+  .btn-rejeitar{ background:transparent; border:1.5px solid var(--tag-red); color:var(--tag-red); }
+  .btn-sair{ background:transparent; border:1px solid var(--rule); color:var(--ink-soft); }
+
+  .oculto{ display:none !important; }
+  .erro-login{ color:var(--tag-red); font-size:0.85rem; }
+
+  section.bloco{ margin-bottom:34px; }
+  section.bloco h2{
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.06em;
+    font-size:1rem; color:var(--ink-soft); border-bottom:1px dashed var(--rule); padding-bottom:8px; margin-bottom:14px;
+  }
+  .atalho-fila{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    border:1.5px solid var(--rule); padding:8px 14px; border-radius:2px; font-size:0.85rem;
+  }
+  .atalho-fila:hover{ border-color:var(--gold); color:var(--gold); }
+
+  .card-pendente{
+    background:var(--paper-raised); border:1px solid var(--rule); padding:16px; margin-bottom:12px;
+    display:flex; flex-direction:column; gap:8px;
+  }
+  .card-pendente .eyebrow{
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; color:var(--ink-soft);
+  }
+  .card-pendente h3{ margin:0; font-size:1rem; }
+  .card-pendente p{ margin:0; font-size:0.88rem; color:var(--ink-soft); }
+  .card-pendente .link-anuncio{ font-size:0.82rem; word-break:break-all; }
+  .card-pendente .acoes{ display:flex; gap:8px; margin-top:6px; }
+  .vazio{ color:var(--ink-soft); font-size:0.88rem; font-style:italic; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1 class="display">Painel — Radar de Ofertas</h1>
+  <div class="subtitulo">Área restrita ao administrador.</div>
+
+  <div class="painel-login" id="bloco-login">
+    <label>
+      <span>E-mail</span>
+      <input type="email" id="login-email" autocomplete="username">
+    </label>
+    <label>
+      <span>Senha</span>
+      <input type="password" id="login-senha" autocomplete="current-password">
+    </label>
+    <button class="btn-principal" id="botao-login">Entrar</button>
+    <div class="erro-login oculto" id="erro-login"></div>
+  </div>
+
+  <div id="bloco-painel" class="oculto">
+    <button class="btn-sair" id="botao-sair" style="margin-bottom:24px;">Sair</button>
+
+    <section class="bloco">
+      <h2>Fila de produtos orgânicos</h2>
+      <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/achados/tree/main/fila" target="_blank" rel="noopener">
+        Abrir pasta fila/ no GitHub &rarr;
+      </a>
+    </section>
+
+    <section class="bloco">
+      <h2>Anúncios pendentes de aprovação</h2>
+      <div id="lista-pendentes"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Lembretes</h2>
+      <div id="lista-lembretes"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Cliques por parceiro</h2>
+      <div id="lista-cliques"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Termos mais buscados</h2>
+      <div id="lista-buscas"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Buscas sem resultado</h2>
+      <p class="subtitulo" style="margin-bottom:12px;">Sinal de demanda que nenhum parceiro/achado atende ainda — decida manualmente se vale correr atrás de alguém.</p>
+      <div id="lista-buscas-vazias"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Pedidos de upgrade pra plano pago</h2>
+      <div id="lista-upgrades"><div class="vazio">Carregando...</div></div>
+    </section>
+
+    <section class="bloco">
+      <h2>Perfil de audiência</h2>
+      <a class="atalho-fila" href="https://console.firebase.google.com/project/radar-de-ofertas-2026/analytics" target="_blank" rel="noopener">
+        Abrir Google Analytics (Firebase) &rarr;
+      </a>
+    </section>
+  </div>
+</div>
+
+<script type="module">
+  import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+  import {
+    getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+  import {
+    getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc
+  } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+  import { firebaseConfig } from "./firebase-config.js";
+
+  const app = initializeApp(firebaseConfig);
+  const auth = getAuth(app);
+  const db = getFirestore(app);
+
+  const blocoLogin = document.getElementById('bloco-login');
+  const blocoPainel = document.getElementById('bloco-painel');
+  const erroLogin = document.getElementById('erro-login');
+  const listaPendentes = document.getElementById('lista-pendentes');
+  const listaLembretes = document.getElementById('lista-lembretes');
+  const listaCliques = document.getElementById('lista-cliques');
+  const listaBuscas = document.getElementById('lista-buscas');
+  const listaBuscasVazias = document.getElementById('lista-buscas-vazias');
+  const listaUpgrades = document.getElementById('lista-upgrades');
+
+  document.getElementById('botao-login').addEventListener('click', async () => {
+    const email = document.getElementById('login-email').value.trim();
+    const senha = document.getElementById('login-senha').value;
+    erroLogin.classList.add('oculto');
+    try {
+      await signInWithEmailAndPassword(auth, email, senha);
+    } catch (e) {
+      erroLogin.textContent = 'E-mail ou senha incorretos.';
+      erroLogin.classList.remove('oculto');
+    }
+  });
+
+  document.getElementById('botao-sair').addEventListener('click', () => signOut(auth));
+
+  onAuthStateChanged(auth, (user) => {
+    if (user) {
+      blocoLogin.classList.add('oculto');
+      blocoPainel.classList.remove('oculto');
+      carregarPendentes();
+      carregarLembretesECliques();
+      carregarBuscas();
+      carregarUpgrades();
+    } else {
+      blocoLogin.classList.remove('oculto');
+      blocoPainel.classList.add('oculto');
+    }
+  });
+
+  function formatRelativo(ts) {
+    if (!ts) return '';
+    const criado = ts.toDate ? ts.toDate() : new Date(ts);
+    const diffH = Math.round((Date.now() - criado.getTime()) / 3600000);
+    if (diffH < 1) return 'há menos de 1h';
+    if (diffH < 24) return 'há ' + diffH + 'h';
+    return 'há ' + Math.round(diffH / 24) + ' dia(s)';
+  }
+
+  async function carregarPendentes() {
+    listaPendentes.innerHTML = '<div class="vazio">Carregando...</div>';
+    const snap = await getDocs(query(collection(db, 'anuncios'), where('status', '==', 'pendente')));
+    if (snap.empty) {
+      listaPendentes.innerHTML = '<div class="vazio">Nenhum anúncio pendente no momento.</div>';
+      return;
+    }
+    listaPendentes.innerHTML = '';
+    for (const anuncioSnap of snap.docs) {
+      const anuncio = anuncioSnap.data();
+      let nomeParceiro = anuncio.parceiroId;
+      let tipoParceiro = '';
+      try {
+        const parceiroSnap = await getDoc(doc(db, 'parceiros', anuncio.parceiroId));
+        if (parceiroSnap.exists()) {
+          nomeParceiro = parceiroSnap.data().nome;
+          tipoParceiro = parceiroSnap.data().tipo;
+        }
+      } catch (e) { /* mantem o id se falhar */ }
+
+      const card = document.createElement('div');
+      card.className = 'card-pendente';
+      card.innerHTML = `
+        <div class="eyebrow">${tipoParceiro || '—'} · ${formatRelativo(anuncio.criadoEm)} · ${anuncio.duracaoDias} dias</div>
+        <h3>${nomeParceiro}</h3>
+        <p>${(anuncio.texto || '').replace(/</g, '&lt;')}</p>
+        <div class="link-anuncio"><a href="${anuncio.link}" target="_blank" rel="noopener">${anuncio.link}</a></div>
+        <div class="acoes">
+          <button class="btn-aprovar" data-acao="aprovado">Aprovar</button>
+          <button class="btn-rejeitar" data-acao="rejeitado">Rejeitar</button>
+        </div>
+      `;
+      card.querySelectorAll('button[data-acao]').forEach(btn => {
+        btn.addEventListener('click', async () => {
+          btn.closest('.acoes').querySelectorAll('button').forEach(b => b.disabled = true);
+          await updateDoc(doc(db, 'anuncios', anuncioSnap.id), { status: btn.dataset.acao });
+          card.remove();
+          if (!listaPendentes.querySelector('.card-pendente')) {
+            listaPendentes.innerHTML = '<div class="vazio">Nenhum anúncio pendente no momento.</div>';
+          }
+        });
+      });
+      listaPendentes.appendChild(card);
+    }
+  }
+
+  function mesAnoAtual(offset = 0) {
+    const d = new Date();
+    d.setMonth(d.getMonth() - offset);
+    return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+  }
+
+  async function carregarLembretesECliques() {
+    listaLembretes.innerHTML = '<div class="vazio">Carregando...</div>';
+    listaCliques.innerHTML = '<div class="vazio">Carregando...</div>';
+
+    const [parceirosSnap, anunciosSnap, cliquesSnap] = await Promise.all([
+      getDocs(collection(db, 'parceiros')),
+      getDocs(collection(db, 'anuncios')),
+      getDocs(collection(db, 'cliques'))
+    ]);
+
+    const parceiros = parceirosSnap.docs.map(d => ({ id: d.id, ...d.data() }));
+    const anuncios = anunciosSnap.docs.map(d => d.data());
+    const cliques = cliquesSnap.docs.map(d => d.data());
+
+    // --- Cliques por parceiro (total, mes atual, mes anterior) ---
+    const mesAtual = mesAnoAtual(0);
+    const mesPassado = mesAnoAtual(1);
+    listaCliques.innerHTML = '';
+    if (!parceiros.length) {
+      listaCliques.innerHTML = '<div class="vazio">Nenhum parceiro cadastrado ainda.</div>';
+    } else {
+      parceiros
+        .map(p => {
+          const doParceiro = cliques.filter(c => c.parceiroId === p.id);
+          return {
+            nome: p.nome,
+            total: doParceiro.length,
+            esteMs: doParceiro.filter(c => c.mesAno === mesAtual).length,
+            mesPassadoQtd: doParceiro.filter(c => c.mesAno === mesPassado).length
+          };
+        })
+        .sort((a, b) => b.total - a.total)
+        .forEach(p => {
+          const linha = document.createElement('div');
+          linha.className = 'card-pendente';
+          linha.innerHTML = `<h3>${p.nome}</h3><p>${p.total} clique(s) no total · ${p.esteMs} este mês · ${p.mesPassadoQtd} mês passado</p>`;
+          listaCliques.appendChild(linha);
+        });
+    }
+
+    // --- Lembretes ---
+    const lembretes = [];
+    const agora = Date.now();
+
+    parceiros.forEach(p => {
+      if (p.plano === 'gratis' && p.trialExpiraEm) {
+        const expira = p.trialExpiraEm.toDate ? p.trialExpiraEm.toDate() : new Date(p.trialExpiraEm);
+        const diasRestantes = Math.round((expira.getTime() - agora) / 86400000);
+        if (diasRestantes <= 14) {
+          lembretes.push(diasRestantes < 0
+            ? `${p.nome} — trial grátis já expirou há ${Math.abs(diasRestantes)} dia(s).`
+            : `${p.nome} — trial grátis expira em ${diasRestantes} dia(s).`);
+        }
+      }
+      const anunciosDoParceiro = anuncios.filter(a => a.parceiroId === p.id);
+      const maisRecente = anunciosDoParceiro.reduce((max, a) => {
+        const ts = a.criadoEm && a.criadoEm.toDate ? a.criadoEm.toDate().getTime() : 0;
+        return ts > max ? ts : max;
+      }, 0);
+      const diasSemAnuncio = maisRecente ? Math.round((agora - maisRecente) / 86400000) : null;
+      if (diasSemAnuncio !== null && diasSemAnuncio > 7) {
+        lembretes.push(`Chamar ${p.nome} — não manda anúncio novo há ${diasSemAnuncio} dia(s).`);
+      }
+    });
+
+    try {
+      const resp = await fetch('https://raw.githubusercontent.com/atosdutrafreitas-wq/achados/main/historico.md');
+      const texto = await resp.text();
+      const primeiraData = texto.match(/(\d{4}-\d{2}-\d{2})/);
+      if (primeiraData) {
+        const dias = Math.round((agora - new Date(primeiraData[1]).getTime()) / 86400000);
+        if (dias >= 3) lembretes.push(`Você não publica um achado orgânico novo há ${dias} dia(s).`);
+      }
+    } catch (e) { /* historico.md indisponivel — nao bloqueia o resto do painel */ }
+
+    listaLembretes.innerHTML = lembretes.length
+      ? lembretes.map(l => `<div class="card-pendente">${l}</div>`).join('')
+      : '<div class="vazio">Nenhum lembrete no momento.</div>';
+  }
+
+  async function carregarBuscas() {
+    listaBuscas.innerHTML = '<div class="vazio">Carregando...</div>';
+    listaBuscasVazias.innerHTML = '<div class="vazio">Carregando...</div>';
+    const snap = await getDocs(collection(db, 'buscas'));
+    const buscas = snap.docs.map(d => d.data());
+
+    function tally(lista) {
+      const contagem = {};
+      lista.forEach(b => { contagem[b.termo] = (contagem[b.termo] || 0) + 1; });
+      return Object.entries(contagem).sort((a, b) => b[1] - a[1]).slice(0, 10);
+    }
+
+    const top = tally(buscas);
+    listaBuscas.innerHTML = top.length
+      ? top.map(([termo, n]) => `<div class="card-pendente">"${termo}" — ${n}x</div>`).join('')
+      : '<div class="vazio">Nenhuma busca registrada ainda.</div>';
+
+    const semResultado = tally(buscas.filter(b => b.encontrou === false));
+    listaBuscasVazias.innerHTML = semResultado.length
+      ? semResultado.map(([termo, n]) => `<div class="card-pendente">"${termo}" — ${n}x sem resultado</div>`).join('')
+      : '<div class="vazio">Nenhuma busca sem resultado registrada.</div>';
+  }
+
+  async function carregarUpgrades() {
+    listaUpgrades.innerHTML = '<div class="vazio">Carregando...</div>';
+    const snap = await getDocs(collection(db, 'pedidosUpgrade'));
+    if (snap.empty) {
+      listaUpgrades.innerHTML = '<div class="vazio">Nenhum pedido de upgrade ainda.</div>';
+      return;
+    }
+    listaUpgrades.innerHTML = '';
+    for (const s of snap.docs) {
+      const d = s.data();
+      let nome = d.parceiroId;
+      try {
+        const p = await getDoc(doc(db, 'parceiros', d.parceiroId));
+        if (p.exists()) nome = p.data().nome;
+      } catch (e) { /* mantem o id se falhar */ }
+      const linha = document.createElement('div');
+      linha.className = 'card-pendente';
+      linha.innerHTML = `<h3>${nome}</h3><p>Contato: ${d.contato} · ${formatRelativo(d.ts)}</p>`;
+      listaUpgrades.appendChild(linha);
+    }
+  }
+</script>
+</body>
+</html>

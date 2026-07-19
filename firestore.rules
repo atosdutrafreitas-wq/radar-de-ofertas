@@ -1,0 +1,79 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isAdmin() {
+      // Nao ha cadastro publico de usuario (sem createUser exposto no site) — o unico
+      // jeito de existir uma credencial com esse e-mail e o dono ter criado manualmente
+      // no Console, entao o match exato de e-mail ja e a trava real.
+      return request.auth != null
+        && request.auth.token.email == "atosdutrafreitas@gmail.com";
+    }
+
+    // Parceiros (lojas/prestadores de servico) — a "conta" do anunciante.
+    match /parceiros/{id} {
+      allow read: if true; // precisa aparecer no site (nome, tipo, lat/lng p/ distancia)
+      allow create: if request.resource.data.keys().hasAll(['tipo','nome','contato','plano','criadoEm'])
+                    && request.resource.data.tipo in ['produto','servico']
+                    && request.resource.data.plano == 'gratis'
+                    && request.resource.data.criadoEm == request.time
+                    && request.resource.data.nome is string
+                    && request.resource.data.nome.size() > 0
+                    && request.resource.data.nome.size() < 200
+                    && request.resource.data.contato is string
+                    && request.resource.data.contato.size() > 0
+                    && (request.resource.data.tipo != 'servico'
+                        || (request.resource.data.endereco is string
+                            && request.resource.data.endereco.size() > 0));
+      allow update: if isAdmin(); // aprovar upgrade de plano, corrigir lat/lng
+      allow delete: if isAdmin();
+    }
+
+    // Anuncios — uma publicacao de um parceiro (pode expirar, ser reprovado, etc).
+    match /anuncios/{id} {
+      allow read: if resource.data.status == 'aprovado' || isAdmin();
+      allow create: if request.resource.data.keys().hasAll(['parceiroId','texto','link','duracaoDias','criadoEm','status'])
+                    && request.resource.data.parceiroId is string
+                    && request.resource.data.status == 'pendente'
+                    && request.resource.data.criadoEm == request.time
+                    && request.resource.data.texto is string
+                    && request.resource.data.texto.size() < 2000
+                    && request.resource.data.link is string
+                    && request.resource.data.duracaoDias is number;
+      allow update: if isAdmin(); // aprovar/rejeitar
+      allow delete: if isAdmin();
+    }
+
+    // Pedidos de upgrade pra plano pago — sinal simples, sem cobranca automatica.
+    // O dono fecha manualmente (contato direto), igual ao texto ja existente em anuncie.html.
+    match /pedidosUpgrade/{id} {
+      allow create: if request.resource.data.keys().hasAll(['parceiroId','contato','ts'])
+                    && request.resource.data.parceiroId is string
+                    && request.resource.data.contato is string
+                    && request.resource.data.ts == request.time;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // Cliques — log bruto anonimo, um doc por clique.
+    match /cliques/{id} {
+      allow create: if request.resource.data.keys().hasAll(['anuncioId','parceiroId','ts','mesAno'])
+                    && request.resource.data.anuncioId is string
+                    && request.resource.data.parceiroId is string
+                    && request.resource.data.ts == request.time;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+
+    // Buscas — log bruto anonimo, um doc por busca.
+    match /buscas/{id} {
+      allow create: if request.resource.data.keys().hasAll(['termo','encontrou','ts','mesAno'])
+                    && request.resource.data.termo is string
+                    && request.resource.data.termo.size() < 100
+                    && request.resource.data.encontrou is bool
+                    && request.resource.data.ts == request.time;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
+  }
+}
