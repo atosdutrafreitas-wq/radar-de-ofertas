@@ -537,6 +537,18 @@
       }
     } catch (e) { /* historico.md indisponivel — nao bloqueia o resto do painel */ }
 
+    try {
+      const resp = await fetch('https://api.github.com/repos/atosdutrafreitas-wq/achados/contents/fila');
+      const itens = await resp.json();
+      const pendentesNaFila = Array.isArray(itens) ? itens.filter(i => i.type === 'file') : [];
+      if (pendentesNaFila.length) {
+        lembretes.push({
+          nivel: 'status-warning',
+          texto: `${pendentesNaFila.length} item(ns) na fila aguardando conclusão manual (a rotina automática não conseguiu extrair os dados) — veja em fila/.`
+        });
+      }
+    } catch (e) { /* GitHub API indisponivel — nao bloqueia o resto do painel */ }
+
     listaLembretes.innerHTML = lembretes.length
       ? lembretes.map(l => `<div class="card-pendente ${l.nivel} ${l.parceiroId ? 'clicavel' : ''}" ${l.parceiroId ? `data-ver-parceiro="${l.parceiroId}"` : ''}>${l.texto}</div>`).join('')
       : '<div class="vazio">Nenhum lembrete no momento.</div>';
