@@ -111,6 +111,27 @@
   .card-pendente .acoes{ display:flex; gap:8px; margin-top:6px; }
   .vazio{ color:var(--ink-soft); font-size:0.88rem; font-style:italic; }
   .lista-scroll{ max-height:360px; overflow-y:auto; padding-right:4px; }
+
+  .clicavel{ cursor:pointer; transition:border-color 120ms ease, transform 120ms ease; }
+  .clicavel:hover{ border-color:var(--gold); transform:translateX(2px); }
+
+  .modal-overlay{
+    position:fixed; inset:0; background:rgba(0,0,0,0.6); z-index:9999;
+    display:flex; align-items:flex-start; justify-content:center; padding:40px 20px; overflow-y:auto;
+  }
+  .modal-painel{
+    background:var(--paper-raised); border:1px solid var(--gold); max-width:560px; width:100%;
+    padding:24px 26px; position:relative;
+  }
+  .modal-fechar{
+    position:absolute; top:14px; right:14px; background:transparent; border:none; color:var(--ink-soft);
+    font-family:var(--font-mono); font-size:0.78rem; cursor:pointer; padding:4px 8px;
+  }
+  .modal-fechar:hover{ color:var(--tag-red); }
+  #modal-conteudo h3{ margin:0 0 4px; font-size:1.3rem; }
+  #modal-conteudo .eyebrow{ font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.06em; font-size:0.7rem; color:var(--ink-soft); margin-bottom:14px; }
+  #modal-conteudo .linha-stat{ display:flex; justify-content:space-between; padding:8px 0; border-bottom:1px dashed var(--rule); font-size:0.88rem; }
+  #modal-conteudo .anuncio-item{ background:var(--paper); border:1px solid var(--rule); padding:10px 12px; margin-top:8px; font-size:0.85rem; }
 </style>
 </head>
 <body>
@@ -155,6 +176,7 @@
       <section class="painel-card full">
         <h2>Atalhos</h2>
         <div class="atalhos-lista">
+          <a class="atalho-fila" href="index.html" style="border-color:var(--gold); color:var(--gold);">Ver o site &rarr;</a>
           <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/achados/edit/main/index.html" target="_blank" rel="noopener">Publicar / editar site (GitHub) &rarr;</a>
           <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/achados/tree/main/fila" target="_blank" rel="noopener">Fila de produtos &rarr;</a>
           <a class="atalho-fila" href="https://console.firebase.google.com/project/radar-de-ofertas-2026/firestore/data" target="_blank" rel="noopener">Dados brutos (Firestore) &rarr;</a>
@@ -205,6 +227,13 @@
       </section>
     </div>
   </div>
+
+  <div id="modal-overlay" class="modal-overlay oculto">
+    <div class="modal-painel" role="dialog" aria-label="Detalhe do parceiro">
+      <button class="modal-fechar" id="modal-fechar">Fechar ×</button>
+      <div id="modal-conteudo"></div>
+    </div>
+  </div>
 </div>
 
 <script type="module">
@@ -220,6 +249,60 @@
   const app = initializeApp(firebaseConfig);
   const auth = getAuth(app);
   const db = getFirestore(app);
+
+  // Estado compartilhado — alimentado pelos loaders, lido pelo modal de detalhe.
+  let estadoParceiros = [];
+  let estadoAnuncios = [];
+  let estadoCliques = [];
+
+  const modalOverlay = document.getElementById('modal-overlay');
+  const modalConteudo = document.getElementById('modal-conteudo');
+  document.getElementById('modal-fechar').addEventListener('click', () => modalOverlay.classList.add('oculto'));
+  modalOverlay.addEventListener('click', (ev) => { if (ev.target === modalOverlay) modalOverlay.classList.add('oculto'); });
+  document.addEventListener('keydown', (ev) => { if (ev.key === 'Escape') modalOverlay.classList.add('oculto'); });
+
+  function abrirDetalheParceiro(parceiroId) {
+    const p = estadoParceiros.find(x => x.id === parceiroId);
+    if (!p) return;
+    const anunciosDoParceiro = estadoAnuncios.filter(a => a.parceiroId === parceiroId);
+    const cliquesDoParceiro = estadoCliques.filter(c => c.parceiroId === parceiroId);
+    let trialTxt = p.plano === 'pago' ? 'Plano pago' : '—';
+    if (p.plano === 'gratis' && p.trialExpiraEm) {
+      const expira = p.trialExpiraEm.toDate ? p.trialExpiraEm.toDate() : new Date(p.trialExpiraEm);
+      const dias = Math.round((expira.getTime() - Date.now()) / 86400000);
+      trialTxt = dias < 0 ? `Trial expirado há ${Math.abs(dias)}d` : `Trial expira em ${dias}d`;
+    }
+    const itensAnuncio = anunciosDoParceiro
+      .map((a, i) => {
+        const idAprox = a.criadoEm && a.criadoEm.toDate ? a.criadoEm.toDate().getTime() : i;
+        const cliquesDoAnuncio = cliquesDoParceiro.filter(c => c.anuncioId === a._id).length;
+        return { ...a, cliquesDoAnuncio };
+      })
+      .sort((a, b) => b.cliquesDoAnuncio - a.cliquesDoAnuncio)
+      .map(a => `<div class="anuncio-item"><strong>${a.cliquesDoAnuncio}</strong> clique(s) — ${(a.texto || '(sem texto)').slice(0, 80)} <span style="color:var(--ink-soft);">[${a.status}]</span></div>`)
+      .join('');
+
+    modalConteudo.innerHTML = `
+      <div class="eyebrow">${p.tipo}</div>
+      <h3>${p.nome}</h3>
+      <div class="linha-stat"><span>Contato</span><span>${p.contato}</span></div>
+      <div class="linha-stat"><span>Plano</span><span>${trialTxt}</span></div>
+      <div class="linha-stat"><span>Cliques totais</span><span>${cliquesDoParceiro.length}</span></div>
+      <div style="margin-top:16px;">
+        <div class="eyebrow" style="margin-bottom:8px;">Anúncios (mais clicado primeiro)</div>
+        ${itensAnuncio || '<div class="vazio">Nenhum anúncio ainda.</div>'}
+      </div>
+    `;
+    modalOverlay.classList.remove('oculto');
+  }
+
+  // Delegacao: qualquer elemento com data-ver-parceiro dentro do painel abre o detalhe,
+  // exceto se o clique realmente veio de um botao de acao (aprovar/rejeitar).
+  document.getElementById('bloco-painel').addEventListener('click', (ev) => {
+    if (ev.target.closest('button[data-acao]')) return;
+    const alvo = ev.target.closest('[data-ver-parceiro]');
+    if (alvo) abrirDetalheParceiro(alvo.dataset.verParceiro);
+  });
 
   const blocoLogin = document.getElementById('bloco-login');
   const blocoPainel = document.getElementById('bloco-painel');
@@ -292,7 +375,8 @@
       } catch (e) { /* mantem o id se falhar */ }
 
       const card = document.createElement('div');
-      card.className = 'card-pendente';
+      card.className = 'card-pendente clicavel';
+      card.dataset.verParceiro = anuncio.parceiroId;
       card.innerHTML = `
         <div class="eyebrow">${tipoParceiro || '—'} · ${formatRelativo(anuncio.criadoEm)} · ${anuncio.duracaoDias} dias</div>
         <h3>${nomeParceiro}</h3>
@@ -336,9 +420,13 @@
     ]);
 
     const parceiros = parceirosSnap.docs.map(d => ({ id: d.id, ...d.data() }));
-    const anuncios = anunciosSnap.docs.map(d => d.data());
+    const anuncios = anunciosSnap.docs.map(d => ({ _id: d.id, ...d.data() }));
     const cliques = cliquesSnap.docs.map(d => d.data());
     const agora = Date.now();
+
+    estadoParceiros = parceiros;
+    estadoAnuncios = anuncios;
+    estadoCliques = cliques;
 
     // --- Cliques por parceiro (total, mes atual vs mes anterior, com comparativo) ---
     const mesAtual = mesAnoAtual(0);
@@ -352,6 +440,7 @@
         .map(p => {
           const doParceiro = cliques.filter(c => c.parceiroId === p.id);
           return {
+            id: p.id,
             nome: p.nome,
             total: doParceiro.length,
             esteMs: doParceiro.filter(c => c.mesAno === mesAtual).length,
@@ -365,7 +454,8 @@
           const corDelta = delta > 0 ? 'var(--savings)' : (delta < 0 ? 'var(--tag-red)' : 'var(--ink-soft)');
           const setaDelta = delta > 0 ? '▲' : (delta < 0 ? '▼' : '·');
           const linha = document.createElement('div');
-          linha.className = 'card-pendente';
+          linha.className = 'card-pendente clicavel';
+          linha.dataset.verParceiro = p.id;
           linha.innerHTML = `
             <h3>${p.nome}</h3>
             <p><strong style="color:var(--ink); font-size:1.1rem;">${p.esteMs}</strong> este mês
@@ -391,7 +481,7 @@
           } else if (p.plano === 'pago') {
             trialTxt = 'plano pago';
           }
-          return `<div class="card-pendente ${nivel}"><h3>${p.nome}</h3><p>${p.tipo} · ${p.contato} · ${trialTxt}</p></div>`;
+          return `<div class="card-pendente clicavel ${nivel}" data-ver-parceiro="${p.id}"><h3>${p.nome}</h3><p>${p.tipo} · ${p.contato} · ${trialTxt}</p></div>`;
         }).join('')
       : '<div class="vazio">Nenhum parceiro cadastrado ainda.</div>';
 
@@ -406,7 +496,7 @@
       .sort((a, b) => b.ts.toDate() - a.ts.toDate())
       .slice(0, 50);
     listaCliquesRecentes.innerHTML = recentes.length
-      ? recentes.map(c => `<div class="card-pendente">${formatExato(c.ts)} — ${porParceiroId[c.parceiroId] || c.parceiroId}</div>`).join('')
+      ? recentes.map(c => `<div class="card-pendente clicavel" data-ver-parceiro="${c.parceiroId}">${formatExato(c.ts)} — ${porParceiroId[c.parceiroId] || c.parceiroId}</div>`).join('')
       : '<div class="vazio">Nenhum clique registrado ainda.</div>';
 
     // --- Lembretes (com nivel de severidade: critical > warning) ---
@@ -419,6 +509,7 @@
         if (diasRestantes <= 14) {
           lembretes.push({
             nivel: diasRestantes < 0 ? 'status-critical' : 'status-warning',
+            parceiroId: p.id,
             texto: diasRestantes < 0
               ? `${p.nome} — trial grátis já expirou há ${Math.abs(diasRestantes)} dia(s).`
               : `${p.nome} — trial grátis expira em ${diasRestantes} dia(s).`
@@ -432,7 +523,7 @@
       }, 0);
       const diasSemAnuncio = maisRecente ? Math.round((agora - maisRecente) / 86400000) : null;
       if (diasSemAnuncio !== null && diasSemAnuncio > 7) {
-        lembretes.push({ nivel: 'status-warning', texto: `Chamar ${p.nome} — não manda anúncio novo há ${diasSemAnuncio} dia(s).` });
+        lembretes.push({ nivel: 'status-warning', parceiroId: p.id, texto: `Chamar ${p.nome} — não manda anúncio novo há ${diasSemAnuncio} dia(s).` });
       }
     });
 
@@ -447,7 +538,7 @@
     } catch (e) { /* historico.md indisponivel — nao bloqueia o resto do painel */ }
 
     listaLembretes.innerHTML = lembretes.length
-      ? lembretes.map(l => `<div class="card-pendente ${l.nivel}">${l.texto}</div>`).join('')
+      ? lembretes.map(l => `<div class="card-pendente ${l.nivel} ${l.parceiroId ? 'clicavel' : ''}" ${l.parceiroId ? `data-ver-parceiro="${l.parceiroId}"` : ''}>${l.texto}</div>`).join('')
       : '<div class="vazio">Nenhum lembrete no momento.</div>';
 
     const statAlertas = document.getElementById('stat-alertas');
@@ -499,7 +590,8 @@
         if (p.exists()) nome = p.data().nome;
       } catch (e) { /* mantem o id se falhar */ }
       const linha = document.createElement('div');
-      linha.className = 'card-pendente';
+      linha.className = 'card-pendente clicavel';
+      linha.dataset.verParceiro = d.parceiroId;
       linha.innerHTML = `<h3>${nome}</h3><p>Contato: ${d.contato} · ${formatRelativo(d.ts)}</p>`;
       listaUpgrades.appendChild(linha);
     }
