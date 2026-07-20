@@ -18,7 +18,7 @@ onAuthStateChanged(auth, (user) => {
     + "font-family:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;font-size:0.72rem;";
   barra.innerHTML = `
     <span style="color:#22E6C8; text-transform:uppercase; letter-spacing:0.06em;">Admin</span>
-    <a href="painel.html" style="color:#E9EEF3; text-decoration:none; border-bottom:1px solid #232B36;">Painel de análise</a>
+    <a href="/achados/painel.html" style="color:#E9EEF3; text-decoration:none; border-bottom:1px solid #232B36;">Painel de análise</a>
     <a href="https://github.com/atosdutrafreitas-wq/achados/upload/main/fila" target="_blank" rel="noopener" style="color:#E9EEF3; text-decoration:none; border-bottom:1px solid #232B36;">Enviar publicações</a>
   `;
   document.body.prepend(barra);

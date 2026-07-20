@@ -31,7 +31,7 @@
       'font-family:Calibri,"Segoe UI",system-ui,sans-serif;font-size:0.85rem;';
     banner.innerHTML =
       '<span style="max-width:520px;color:#8D98A8;">Usamos cookies pra entender, de forma agregada e anônima, como o site é usado. Você pode aceitar ou recusar — ' +
-      '<a href="privacidade.html" style="color:#22E6C8;">saiba mais</a>.</span>' +
+      '<a href="/achados/privacidade.html" style="color:#22E6C8;">saiba mais</a>.</span>' +
       '<span style="display:flex;gap:8px;flex-shrink:0;">' +
       '<button id="cookie-recusar" style="background:transparent;border:1.5px solid #8D98A8;color:#8D98A8;padding:8px 14px;border-radius:2px;cursor:pointer;font-family:inherit;">Recusar</button>' +
       '<button id="cookie-aceitar" style="background:#22E6C8;border:none;color:#0B0E13;padding:8px 14px;border-radius:2px;cursor:pointer;font-family:inherit;font-weight:bold;">Aceitar</button>' +

@@ -170,6 +170,7 @@
       <div class="stat-tile"><div class="rotulo">Cliques este mês</div><div class="valor" id="stat-cliques-mes">—</div></div>
       <div class="stat-tile"><div class="rotulo">Pendentes de aprovação</div><div class="valor" id="stat-pendentes">—</div></div>
       <div class="stat-tile" id="stat-alertas-tile"><div class="rotulo">Alertas</div><div class="valor" id="stat-alertas">—</div></div>
+      <div class="stat-tile"><div class="rotulo">Capturas de visitantes</div><div class="valor" id="stat-capturas">—</div></div>
     </div>
 
     <div class="dashboard-grid">
@@ -338,6 +339,7 @@
       carregarLembretesECliques();
       carregarBuscas();
       carregarUpgrades();
+      carregarCapturas();
     } else {
       blocoLogin.classList.remove('oculto');
       blocoPainel.classList.add('oculto');
@@ -351,6 +353,11 @@
     if (diffH < 1) return 'há menos de 1h';
     if (diffH < 24) return 'há ' + diffH + 'h';
     return 'há ' + Math.round(diffH / 24) + ' dia(s)';
+  }
+
+  async function carregarCapturas() {
+    const snap = await getDocs(collection(db, 'captura_visitantes'));
+    document.getElementById('stat-capturas').textContent = snap.size;
   }
 
   async function carregarPendentes() {

@@ -208,6 +208,29 @@
   footer .social svg{ width:18px; height:18px; fill:currentColor; }
   .disclosure{ max-width:640px; }
 
+  /* captura de visitantes */
+  .captura-banner{
+    border:1.5px dashed var(--gold);
+    background:var(--paper-raised);
+    padding:18px 20px;
+    margin-bottom:22px;
+    text-align:center;
+    display:flex; flex-direction:column; align-items:center; gap:8px;
+  }
+  .captura-banner h2{
+    margin:0; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    font-size:1.05rem; color:var(--gold);
+  }
+  .captura-banner p{ margin:0; color:var(--ink-soft); font-size:0.88rem; max-width:480px; }
+  .captura-form{
+    display:flex; flex-wrap:wrap; gap:10px; justify-content:center; width:100%; max-width:560px; margin-top:6px;
+  }
+  .captura-form .busca-campo{ flex:1 1 200px; margin-bottom:0; }
+  .captura-form button{ flex:0 0 auto; border:none; cursor:pointer; }
+  .captura-feedback{ min-height:1.1em; font-size:0.82rem; }
+  .captura-feedback.sucesso{ color:var(--savings); }
+  .captura-feedback.erro{ color:var(--tag-red); }
+
   /* advertiser banner */
   .advertiser-banner{
     border:1.5px dashed var(--tag-red);
@@ -247,6 +270,21 @@
   <div class="rule-row">
     <span>Mercado Livre, Shopee &amp; Amazon</span>
     <span>Ofertas selecionadas</span>
+  </div>
+
+  <div class="captura-banner" id="captura-banner">
+    <h2>Não perca nenhum achado</h2>
+    <p>Deixa seu e-mail ou WhatsApp aqui que a gente te avisa quando sair oferta boa.</p>
+    <form id="captura-form" class="captura-form" novalidate>
+      <label class="busca-campo">
+        <input type="text" id="captura-contato" placeholder="Seu e-mail ou WhatsApp" autocomplete="off" required>
+      </label>
+      <label class="busca-campo">
+        <input type="text" id="captura-nome" placeholder="Nome (opcional)" autocomplete="off">
+      </label>
+      <button type="submit" class="cta">Quero receber <span aria-hidden="true">&rarr;</span></button>
+    </form>
+    <div class="captura-feedback" id="captura-feedback" role="status" aria-live="polite"></div>
   </div>
 
   <label class="busca-campo">
@@ -387,6 +425,7 @@
   });
 </script>
 <script type="module" src="cliques.js"></script>
+<script type="module" src="captura.js"></script>
 <script src="cookie-consent.js"></script>
 <script type="module" src="admin-bar.js"></script>
 </body>

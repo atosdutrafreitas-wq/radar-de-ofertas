@@ -75,5 +75,17 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow update, delete: if false;
     }
+
+    // Captura de visitantes — formulario publico (index.html), contato de e-mail/WhatsApp.
+    match /captura_visitantes/{id} {
+      allow create: if request.resource.data.keys().hasAll(['contato','nome','criado_em'])
+                    && request.resource.data.contato is string
+                    && request.resource.data.contato.size() > 0
+                    && request.resource.data.contato.size() < 200
+                    && (request.resource.data.nome == null || request.resource.data.nome is string)
+                    && request.resource.data.criado_em == request.time;
+      allow read: if isAdmin();
+      allow update, delete: if false;
+    }
   }
 }
