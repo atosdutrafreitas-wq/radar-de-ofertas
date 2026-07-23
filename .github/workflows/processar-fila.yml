@@ -6,8 +6,9 @@ on:
     paths:
       - 'fila/*.json'
   schedule:
-    # 09:00 UTC = 06:00 no horario de Brasilia (verifica cards expirados todo dia)
-    - cron: '0 9 * * *'
+    # a cada 15 min: pega ofertas enviadas pelo formulario do painel (fila_pendente no
+    # Firestore) e tambem serve pra checar cards expirados ao longo do dia
+    - cron: '*/15 * * * *'
   workflow_dispatch: {}
 
 permissions:
@@ -36,6 +37,8 @@ jobs:
         run: npm install --no-audit --no-fund
 
       - name: Processa fila e expira cards antigos
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: node .github/scripts/processar-fila.js
 
       - name: Commita e publica, se houve mudanca

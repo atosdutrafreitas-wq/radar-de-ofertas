@@ -93,7 +93,9 @@
   .atalho-fila{
     display:inline-flex; align-items:center; gap:8px; text-decoration:none;
     border:1.5px solid var(--rule); padding:8px 14px; border-radius:2px; font-size:0.85rem;
+    background:transparent; font-family:inherit; color:var(--ink);
   }
+  button.atalho-fila{ cursor:pointer; }
   .atalho-fila:hover{ border-color:var(--gold); color:var(--gold); }
 
   .card-pendente{
@@ -178,8 +180,7 @@
         <h2>Atalhos</h2>
         <div class="atalhos-lista">
           <a class="atalho-fila" href="index.html" style="border-color:var(--gold); color:var(--gold);">Ver o site &rarr;</a>
-          <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/radar-de-ofertas/edit/main/index.html" target="_blank" rel="noopener">Publicar / editar site (GitHub) &rarr;</a>
-          <a class="atalho-fila" href="https://github.com/atosdutrafreitas-wq/radar-de-ofertas/tree/main/fila" target="_blank" rel="noopener">Fila de produtos &rarr;</a>
+          <button type="button" class="atalho-fila" id="botao-nova-oferta" style="border-color:var(--gold); color:var(--gold); cursor:pointer;">+ Nova Oferta &rarr;</button>
           <a class="atalho-fila" href="https://console.firebase.google.com/project/radar-de-ofertas-2026/firestore/data" target="_blank" rel="noopener">Dados brutos (Firestore) &rarr;</a>
           <a class="atalho-fila" href="https://console.firebase.google.com/project/radar-de-ofertas-2026/analytics" target="_blank" rel="noopener">Analisar dados (Analytics) &rarr;</a>
         </div>
@@ -243,7 +244,7 @@
     getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
   import {
-    getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc
+    getFirestore, collection, query, where, getDocs, doc, getDoc, updateDoc, addDoc, serverTimestamp
   } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
   import { firebaseConfig } from "./firebase-config.js";
 
@@ -296,6 +297,85 @@
     `;
     modalOverlay.classList.remove('oculto');
   }
+
+  function abrirFormNovaOferta() {
+    modalConteudo.innerHTML = `
+      <div class="eyebrow">Nova oferta</div>
+      <h3>Adicionar à fila</h3>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:16px;">
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Link do produto (com sua tag de afiliado)</span>
+          <input type="url" id="oferta-link" placeholder="https://s.shopee.com.br/..." required
+            style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Preço</span>
+          <input type="text" id="oferta-preco" placeholder="R$ 39,90"
+            style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Link da foto</span>
+          <input type="url" id="oferta-foto" placeholder="https://down-br.img.susercontent.com/..."
+            style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Nome do produto</span>
+          <input type="text" id="oferta-nome" placeholder="Ex: Fone Bluetooth com Cancelamento de Ruído"
+            style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Categoria</span>
+          <select id="oferta-categoria" style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+            <option value="tech">Tech</option>
+            <option value="casa" selected>Casa</option>
+            <option value="beleza">Beleza</option>
+            <option value="bebe">Bebê</option>
+          </select>
+        </label>
+        <button type="button" class="btn-principal" id="oferta-enviar">Adicionar à fila</button>
+        <div id="oferta-status" style="font-size:0.82rem;"></div>
+      </div>
+    `;
+    modalOverlay.classList.remove('oculto');
+
+    document.getElementById('oferta-enviar').addEventListener('click', async () => {
+      const link = document.getElementById('oferta-link').value.trim();
+      const preco = document.getElementById('oferta-preco').value.trim();
+      const foto = document.getElementById('oferta-foto').value.trim();
+      const nome = document.getElementById('oferta-nome').value.trim();
+      const categoria = document.getElementById('oferta-categoria').value;
+      const status = document.getElementById('oferta-status');
+
+      if (!link) {
+        status.textContent = 'Cola o link do produto antes de enviar.';
+        status.style.color = 'var(--tag-red)';
+        return;
+      }
+
+      try {
+        await addDoc(collection(db, 'fila_pendente'), {
+          link,
+          preco: preco || null,
+          foto_nome: foto || null,
+          nota: nome || null,
+          categoria,
+          plataforma: 'Shopee',
+          criado_em: serverTimestamp()
+        });
+        status.textContent = 'Enviado! Publica sozinho em alguns minutos.';
+        status.style.color = 'var(--ok, green)';
+        document.getElementById('oferta-link').value = '';
+        document.getElementById('oferta-preco').value = '';
+        document.getElementById('oferta-foto').value = '';
+        document.getElementById('oferta-nome').value = '';
+      } catch (e) {
+        status.textContent = 'Erro ao enviar: ' + e.message;
+        status.style.color = 'var(--tag-red)';
+      }
+    });
+  }
+
+  document.getElementById('botao-nova-oferta').addEventListener('click', abrirFormNovaOferta);
 
   // Delegacao: qualquer elemento com data-ver-parceiro dentro do painel abre o detalhe,
   // exceto se o clique realmente veio de um botao de acao (aprovar/rejeitar).

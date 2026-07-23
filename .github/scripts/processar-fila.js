@@ -52,15 +52,15 @@ function montarCardHtml(item, expiraISO) {
     </div>\n`;
 }
 
-function lerItensPendentes() {
+function lerItensPendentesArquivo() {
   if (!fs.existsSync(FILA_DIR)) return [];
   return fs.readdirSync(FILA_DIR)
     .filter(f => f.endsWith('.json'))
     .map(f => {
       const full = path.join(FILA_DIR, f);
       try {
-        const data = JSON.parse(fs.readFileSync(full, 'utf8'));
-        return { arquivo: f, caminho: full, dados: data };
+        const dados = JSON.parse(fs.readFileSync(full, 'utf8'));
+        return { origem: 'arquivo', arquivo: f, caminho: full, dados };
       } catch (e) {
         console.log(`Aviso: ${f} nao e um JSON valido, ignorando (${e.message}).`);
         return null;
@@ -69,8 +69,32 @@ function lerItensPendentes() {
     .filter(Boolean);
 }
 
-function main() {
-  const pendentes = lerItensPendentes();
+async function lerItensPendentesFirestore() {
+  const chave = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!chave) {
+    console.log('FIREBASE_SERVICE_ACCOUNT nao configurado — pulando fila do painel (fila_pendente).');
+    return { itens: [], db: null };
+  }
+  const admin = require('firebase-admin');
+  const credencial = JSON.parse(chave);
+  if (!admin.apps.length) {
+    admin.initializeApp({ credential: admin.credential.cert(credencial) });
+  }
+  const db = admin.firestore();
+  const snap = await db.collection('fila_pendente').get();
+  const itens = snap.docs.map(d => {
+    const dados = d.data();
+    const criado = dados.criado_em && dados.criado_em.toDate ? dados.criado_em.toDate().toISOString() : new Date().toISOString();
+    return { origem: 'firestore', docId: d.id, dados: { ...dados, criado_em: criado } };
+  });
+  return { itens, db };
+}
+
+async function main() {
+  const pendentesArquivo = lerItensPendentesArquivo();
+  const { itens: pendentesFirestore, db } = await lerItensPendentesFirestore();
+  const pendentes = [...pendentesArquivo, ...pendentesFirestore];
+
   const $ = cheerio.load(fs.readFileSync(INDEX_PATH, 'utf8'), { decodeEntities: false });
   const $grid = $('#grid');
 
@@ -85,17 +109,18 @@ function main() {
     }
   });
 
-  // 2) Publica itens novos da fila
+  // 2) Publica itens novos da fila (arquivos em fila/ + docs em fila_pendente no Firestore)
   let publicados = [];
   if (pendentes.length) {
     fs.mkdirSync(PROCESSADOS_DIR, { recursive: true });
     const novosCardsHtml = [];
     const novasLegendas = [];
 
-    pendentes.forEach(({ arquivo, caminho, dados }) => {
+    for (const pendente of pendentes) {
+      const dados = pendente.dados;
       if (!dados.link) {
-        console.log(`Aviso: ${arquivo} sem campo "link", ignorando.`);
-        return;
+        console.log(`Aviso: item sem campo "link" (origem: ${pendente.origem}), ignorando.`);
+        continue;
       }
       const criado = dados.criado_em || new Date().toISOString();
       const expira = new Date(new Date(criado).getTime() + 48 * 3600 * 1000).toISOString();
@@ -112,8 +137,16 @@ function main() {
         );
       }
 
-      fs.renameSync(caminho, path.join(PROCESSADOS_DIR, arquivo));
-    });
+      if (pendente.origem === 'arquivo') {
+        fs.renameSync(pendente.caminho, path.join(PROCESSADOS_DIR, pendente.arquivo));
+      } else {
+        // Item veio do formulario do painel (Firestore) — grava o mesmo registro de
+        // auditoria que um item vindo de fila/ teria, e apaga o pendente do Firestore.
+        const nomeArquivo = `${criado.replace(/[:.]/g, '-')}-firestore-${pendente.docId}.json`;
+        fs.writeFileSync(path.join(PROCESSADOS_DIR, nomeArquivo), JSON.stringify(item, null, 2) + '\n');
+        await db.collection('fila_pendente').doc(pendente.docId).delete();
+      }
+    }
 
     if (novosCardsHtml.length) {
       // .after() em nó de comentário nao funciona de forma confiavel no cheerio — insere
@@ -128,9 +161,10 @@ function main() {
   }
 
   if (!publicados.length && !removidos.length) {
+    // Roda a cada 15min agora (antes era 1x/dia) — nao registra "fila vazia" a cada tick,
+    // senao historico.md vira spam. So loga quando ha novidade de verdade.
     console.log('Nada a fazer: fila vazia e nenhum card expirado.');
-    logHistorico(`fila vazia, nenhum item novo pendente.`);
-    return { mudou: false };
+    return;
   }
 
   fs.writeFileSync(INDEX_PATH, $.html());
@@ -139,8 +173,6 @@ function main() {
   if (publicados.length) partes.push(`publicados ${publicados.length} item(ns): ${publicados.join(', ')}`);
   if (removidos.length) partes.push(`removidos ${removidos.length} card(s) expirado(s): ${removidos.join(', ')}`);
   logHistorico(partes.join('. ') + '.');
-
-  return { mudou: true };
 }
 
 function logHistorico(msg) {
@@ -150,6 +182,7 @@ function logHistorico(msg) {
   fs.writeFileSync(HISTORICO_PATH, atualizado);
 }
 
-main();
-// historico.md sempre ganha uma linha nova (mesmo em dia de fila vazia); o workflow decide se
-// comita olhando pro `git status` real, não pra um flag daqui.
+main().catch(e => {
+  console.error('Falha ao processar a fila:', e);
+  process.exit(1);
+});

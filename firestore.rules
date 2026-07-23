@@ -87,5 +87,18 @@ service cloud.firestore {
       allow read: if isAdmin();
       allow update, delete: if false;
     }
+
+    // Fila pendente — formulario simples do painel.html (link + preco + foto). So o admin
+    // escreve; a GitHub Action le/apaga via Admin SDK (que ignora estas regras de qualquer
+    // forma, isso aqui trava so o acesso vindo do navegador).
+    match /fila_pendente/{id} {
+      allow create: if isAdmin()
+                    && request.resource.data.keys().hasAll(['link','criado_em'])
+                    && request.resource.data.link is string
+                    && request.resource.data.link.size() > 0
+                    && request.resource.data.criado_em == request.time;
+      allow read, delete: if isAdmin();
+      allow update: if false;
+    }
   }
 }
