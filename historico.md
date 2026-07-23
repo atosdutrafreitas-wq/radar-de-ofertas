@@ -1,5 +1,7 @@
 # Histórico
 
+- 2026-07-23: fila vazia, nenhum item novo pendente.
+
 - 2026-07-23: publicados 9 itens reais da Shopee de uma vez (primeira leva de conteúdo desde o lançamento): "Fone de Ouvido Bluetooth Sem Fio J760 - Cancelamento de Ruído Conforto+" (Tech, R$ 39,36), "{ORIGINAL} Kit Carregador Cabo e Fonte Tipo C - XR, 11, 12, 13, 14" (Tech, R$ 56,95), "Fone de Ouvido SPOETRY com Cancelamento de Ruído - Estudo, Home Office e Trabalho" (Tech, R$ 65,00), "Sandália Babuche Infantil Menina - Leve e Macia" (Bebê, R$ 22,90), "Kit Meias Infantil Meninos Cano Médio Algodão" (Bebê, R$ 11,88), "Kit Premium 6 Peças Roupa Infantil Menina Verão (2 a 12 Anos)" (Bebê, R$ 49,90), "Kit Suéter Infantil Tricô Menino (1 a 8 Anos)" (Bebê, R$ 53,10), "Kit Organizador de Mesa 4 em 1 Premium - Suporte Headset, Celular e Porta Canetas" (Casa, R$ 41,00), "Suporte Celular de Mesa Universal Ergonômico - Base Antiderrapante" (Casa, R$ 24,90). Todos com foto, nome e preço reais fornecidos manualmente (o link da Shopee não expõe dados sem JS, scraping automático não é viável). Expiram em 48h (2026-07-25T11:56:37.711Z).
 
 - 2026-07-23: fila vazia, nenhum item novo pendente.
