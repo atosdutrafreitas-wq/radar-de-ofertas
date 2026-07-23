@@ -1,0 +1,44 @@
+name: Gerar resumo semanal do blog
+
+on:
+  schedule:
+    # segunda-feira 08:00 UTC = 05:00 no horario de Brasilia
+    - cron: '0 8 * * 1'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+jobs:
+  gerar-post:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configura Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instala dependencias do script
+        working-directory: .github/scripts
+        run: npm install --no-audit --no-fund
+
+      - name: Gera o post semanal a partir do que foi publicado nos ultimos 7 dias
+        run: node .github/scripts/gerar-post-semanal.js
+
+      - name: Commita e publica, se houve mudanca
+        run: |
+          git config user.name "radar-de-ofertas-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git config core.autocrlf false
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nada para commitar."
+          else
+            git commit -m "Publica resumo semanal do blog"
+            git push
+          fi
