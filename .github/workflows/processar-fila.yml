@@ -1,0 +1,52 @@
+name: Processar fila de ofertas
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'fila/*.json'
+  schedule:
+    # 09:00 UTC = 06:00 no horario de Brasilia (verifica cards expirados todo dia)
+    - cron: '0 9 * * *'
+  workflow_dispatch: {}
+
+permissions:
+  contents: write
+
+concurrency:
+  group: processar-fila
+  cancel-in-progress: false
+
+jobs:
+  processar:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Configura Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Instala dependencias do script
+        working-directory: .github/scripts
+        run: npm install --no-audit --no-fund
+
+      - name: Processa fila e expira cards antigos
+        run: node .github/scripts/processar-fila.js
+
+      - name: Commita e publica, se houve mudanca
+        run: |
+          git config user.name "radar-de-ofertas-bot"
+          git config user.email "actions@users.noreply.github.com"
+          git config core.autocrlf false
+          git add -A
+          if git diff --cached --quiet; then
+            echo "Nada para commitar."
+          else
+            git commit -m "Processa fila automaticamente"
+            git push
+          fi
