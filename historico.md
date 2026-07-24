@@ -1,6 +1,6 @@
 # Histórico
 
-- 2026-07-24: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução.
+- 2026-07-24: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução. Gerados roteiros sociais (`blog/roteiros/`) para os 11 artigos publicados do blog que ainda não tinham script: achados-semana-2026-07-23, fone-bluetooth-cancelamento-ruido-ate-70, jaqueta-esportiva-de-inverno-espessada-masculina-e-39-s-algo-ahr0ch, kit-carregador-tipo-c-vale-a-pena, kit-roupa-infantil-menina-verao, meias-infantil-kit-vale-a-pena, organizador-mesa-home-office-vale-a-pena, sandalia-infantil-o-que-observar, sueter-infantil-menino-guia, suporte-celular-mesa-o-que-considerar, tapete-cozinha-antiderrapante-guia. `mouses-programador.html` seguiu marcado "Rascunho — não publicado" e foi ignorado.
 
 - 2026-07-23: publicados 1 item(ns): "Jaqueta Esportiva De Inverno Espessada , Masculina E # 39 ; s Algodão , Gola Alta , Cardigã Casual , Coisa Quente" (106,53). gerados 1 post(s) no blog.
 
