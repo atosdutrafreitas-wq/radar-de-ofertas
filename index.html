@@ -75,11 +75,25 @@
     font-size:0.68rem; color:var(--ink-soft);
   }
   .status-radar .ponto{
+    position:relative;
     width:7px; height:7px; border-radius:50%; background:var(--savings);
-    box-shadow:0 0 8px var(--savings); animation:pulso-radar 2s ease-in-out infinite;
+    box-shadow:0 0 8px var(--savings);
   }
-  @keyframes pulso-radar{ 0%,100%{opacity:1;} 50%{opacity:0.35;} }
-  @media (prefers-reduced-motion:reduce){ .status-radar .ponto{ animation:none; } }
+  .status-radar .ponto::before,
+  .status-radar .ponto::after{
+    content:''; position:absolute; inset:0; border-radius:50%;
+    border:1.5px solid var(--savings);
+    animation:radar-ping 2.4s ease-out infinite;
+    opacity:0;
+  }
+  .status-radar .ponto::after{ animation-delay:1.2s; }
+  @keyframes radar-ping{
+    0%{ transform:scale(1); opacity:0.7; }
+    100%{ transform:scale(6); opacity:0; }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .status-radar .ponto::before, .status-radar .ponto::after{ animation:none; opacity:0; }
+  }
   .rule-row{
     display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft);
     padding:8px 0 20px; border-bottom:1px dashed var(--rule);
@@ -119,6 +133,14 @@
     position:relative;
     display:flex; flex-direction:column; gap:8px;
     clip-path:polygon(0 0,calc(100% - 18px) 0,100% 18px,100% 100%,0 100%);
+    overflow:hidden;
+    opacity:0; transform:translateY(18px) scale(0.98);
+  }
+  .card.in-view{ animation:card-reveal 0.55s ease forwards; }
+  @keyframes card-reveal{ to{ opacity:1; transform:translateY(0) scale(1); } }
+  @media (prefers-reduced-motion:reduce){
+    .card{ opacity:1; transform:none; }
+    .card.in-view{ animation:none; }
   }
   .card .tag{
     position:absolute; top:0; right:0;
@@ -135,7 +157,19 @@
     font-size:0.68rem; padding:4px 10px 3px;
     clip-path:polygon(0 0,100% 0,calc(100% - 12px) 100%,0 100%);
     line-height:1.3;
+    overflow:hidden;
   }
+  .card .tag-novo::after{
+    content:''; position:absolute; top:0; left:-60%; width:40%; height:100%;
+    background:linear-gradient(120deg, transparent, rgba(255,255,255,0.65), transparent);
+    animation:tag-shine 2.6s ease-in-out infinite;
+  }
+  @keyframes tag-shine{
+    0%{ left:-60%; }
+    55%{ left:120%; }
+    100%{ left:120%; }
+  }
+  @media (prefers-reduced-motion:reduce){ .card .tag-novo::after{ animation:none; display:none; } }
   .card .eyebrow{
     font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.1em;
     font-size:0.68rem; color:var(--ink-soft);
@@ -168,7 +202,9 @@
   @media (prefers-reduced-motion:reduce){
     .card .cta:hover, .card .cta:focus-visible{ transform:none; }
   }
-  .card .photo{ width:100%; aspect-ratio:4/3; object-fit:cover; }
+  .card .photo{ width:100%; aspect-ratio:4/3; object-fit:cover; transition:transform 0.4s ease; }
+  .card:hover .photo{ transform:scale(1.07); }
+  @media (prefers-reduced-motion:reduce){ .card:hover .photo{ transform:none; } }
   .card .no-photo{
     width:100%; aspect-ratio:4/3;
     display:flex; align-items:center; justify-content:center;
@@ -214,7 +250,13 @@
     margin-bottom:22px;
     text-align:center;
     display:flex; flex-direction:column; align-items:center; gap:8px;
+    animation:captura-glow 3.2s ease-in-out infinite;
   }
+  @keyframes captura-glow{
+    0%,100%{ box-shadow:0 0 0 rgba(34,230,200,0); }
+    50%{ box-shadow:0 0 24px rgba(34,230,200,0.35); }
+  }
+  @media (prefers-reduced-motion:reduce){ .captura-banner{ animation:none; } }
   .captura-banner h2{
     margin:0; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
     font-size:1.05rem; color:var(--gold);
@@ -383,6 +425,19 @@
     vazioBusca.style.display = (termoBusca.length >= 3 && !algumVisivel) ? '' : 'none';
     return algumVisivel;
   }
+
+  const revealObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('in-view');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12 });
+  cards.forEach((card, i) => {
+    card.style.animationDelay = `${(i % 6) * 0.07}s`;
+    revealObserver.observe(card);
+  });
 
   buttons.forEach(btn => {
     btn.addEventListener('click', () => {
