@@ -1,5 +1,7 @@
 # Histórico
 
+- 2026-07-29: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards).
+
 - 2026-07-28: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards com esse atributo).
 
 - 2026-07-27: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid já estava vazio). Todos os 11 artigos publicados do blog já tinham script em `blog/roteiros/`; `mouses-programador.html` seguiu marcado "Rascunho — não publicado" e foi ignorado.
