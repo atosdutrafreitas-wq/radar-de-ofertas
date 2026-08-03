@@ -1,5 +1,7 @@
 # Histórico
 
+- 2026-08-03: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards com esse atributo).
+
 - 2026-08-02: removidos 1 card(s) expirado(s): Mochila Couro PU Grande Executiva Para Notebook Trabalho Faculdade Reforçada Cabo De Aço USB.
 
 - 2026-07-31: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (card "Mochila Couro PU..." expira em 2026-08-02T02:13:01.226Z, ainda válido).
