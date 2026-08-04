@@ -1,5 +1,7 @@
 # Histórico
 
+- 2026-08-04: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards com esse atributo).
+
 - 2026-08-04: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards com esse atributo). Gerado roteiro social (`blog/roteiros/achados-semana-2026-08-03.md`) para o artigo semanal publicado que ainda não tinha script; `mouses-programador.html` seguiu marcado "Rascunho — não publicado" e foi ignorado.
 
 - 2026-08-03: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards com esse atributo).
