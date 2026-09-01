@@ -1,5 +1,7 @@
 # Histórico
 
+- 2026-09-01: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards).
+
 - 2026-08-31: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards).
 
 - 2026-08-28: fila `fila/` vazia, nenhum item novo pendente. Nenhum card no `index.html` com `data-expira` vencido nesta execução (grid sem cards).
