@@ -3,24 +3,23 @@ Artigo: blog/suporte-celular-mesa-o-que-considerar.html
 
 ## Carrossel Instagram (6 slides)
 
-1. Cansado de segurar o celular na mão em vídeo-chamada ou pra assistir alguma coisa? 📱
-2. Um suporte de mesa resolve isso — ótimo pra quem usa o celular como segunda tela no trabalho também.
-3. Antes de comprar, olhe a BASE: se não for antiderrapante, o suporte desliza com qualquer toque.
-4. Outro ponto importante: o ÂNGULO. Prefira um que ajusta a inclinação — ângulo fixo nem sempre serve pra altura da sua mesa.
-5. Suporte de Celular de Mesa Universal Ergonômico por R$ 24,90.
-6. Critérios reais pra decidir, com a oferta atual no link da bio 🔗
+1. Vídeo-chamada, conteúdo ou segunda tela? Antes de comprar um suporte de celular de mesa, olhe 2 coisas 👀
+2. Pra quem passa horas com o celular na mesa, um suporte evita segurar o aparelho o tempo todo
+3. 1) Base antiderrapante — sem isso, o suporte desliza com qualquer toque
+4. 2) Ângulo ajustável — ângulo fixo nem sempre serve pra altura da sua mesa
+5. Confira na descrição se o produto permite regular a inclinação
+6. Achado do dia: suporte de celular de mesa por R$ 24,90 — link da oferta na bio 🔗
 
 ## Roteiro Reels (30-45s)
 
-- (0-5s) Fala: "Vive segurando o celular pra vídeo-chamada ou pra assistir alguma coisa?" | Tela: "SUPORTE DE CELULAR DE MESA"
-- (6-14s) Fala: "Um suporte de mesa resolve isso, e ainda serve como segunda tela quando você tá trabalhando." | Tela: "USO: vídeo-chamada · conteúdo · 2ª tela"
-- (15-24s) Fala: "Mas antes de comprar, olha a base: se não for antiderrapante, o suporte desliza com qualquer toque." | Tela: "CRITÉRIO 1 · base antiderrapante"
-- (25-34s) Fala: "E confira o ângulo — dá pra ajustar a inclinação? Ângulo fixo nem sempre cabe na altura da sua mesa." | Tela: "CRITÉRIO 2 · ângulo ajustável"
-- (35-42s) Fala: "O suporte universal ergonômico tá por R$ 24,90." | Tela: "R$ 24,90"
-- (43-45s) Fala: "Link na bio!" | Tela: "LINK NA BIO"
+- (0-5s) Fala: "Vai comprar suporte de celular de mesa? Olha isso antes." | Tela: "SUPORTE DE CELULAR: O QUE OBSERVAR"
+- (6-16s) Fala: "Pra quem faz vídeo-chamada, assiste conteúdo ou usa o celular como segunda tela, o suporte evita segurar o aparelho por horas." | Tela: "VÍDEO-CHAMADA · CONTEÚDO · SEGUNDA TELA"
+- (17-28s) Fala: "O ponto mais importante costuma ser a base antiderrapante, porque sem isso o suporte desliza com qualquer toque. E confira o ângulo de ajuste: ângulo fixo nem sempre serve pra sua altura de mesa." | Tela: "BASE ANTIDERRAPANTE + ÂNGULO AJUSTÁVEL"
+- (29-37s) Fala: "O achado de hoje é um suporte de celular de mesa por R$ 24,90." | Tela: "R$ 24,90"
+- (38-43s) Fala: "Link da oferta na bio!" | Tela: "LINK NA BIO"
 
 ## Legenda pronta
 
-Antes de comprar um suporte de celular de mesa, repara em dois pontos: a base antiderrapante (sem isso ele desliza com qualquer toque) e se o ângulo é ajustável, porque ângulo fixo nem sempre serve pra altura da sua mesa. Ótimo pra vídeo-chamada, assistir conteúdo ou usar o celular como segunda tela no trabalho. O suporte universal ergonômico tá por R$ 24,90 — link na bio pra conferir a oferta. 🔗
+Suporte de celular de mesa evita segurar o aparelho por horas em vídeo-chamadas, conteúdo ou como segunda tela. O que mais importa: base antiderrapante (sem ela o suporte desliza com qualquer toque) e ângulo ajustável — ângulo fixo nem sempre serve pra altura da sua mesa. O achado de hoje é um suporte de mesa por R$ 24,90. Link da oferta na bio! 🔗
 
-#radardeofertas #suportedecelular #achados #organizacao #homeoffice #promoção
+#radardeofertas #suportecelular #homeoffice #setup #achadinhos #promoção
