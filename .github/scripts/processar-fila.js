@@ -50,7 +50,9 @@ async function enviarTelegram(item) {
   const nome = nomeOferta(item);
   const linhas = [
     `🔥 <b>${escapeHtml(nome)}</b>`,
-    item.preco && String(item.preco).trim() ? `💰 ${escapeHtml(item.preco)}` : null,
+    item.preco && String(item.preco).trim()
+      ? `💰 ${escapeHtml(item.preco)}${descontoPct(item) !== null ? ` (de ${escapeHtml(item.preco_original)}, -${descontoPct(item)}%)` : ''}`
+      : null,
     item.plataforma ? `🛒 ${escapeHtml(item.plataforma)}` : null,
     `👉 ${escapeHtml(item.link)}`,
     '',
@@ -96,6 +98,24 @@ function gerarSitemap() {
 // Ofertas expiradas (48h) ficam no site como "publicadas recentemente" e so saem depois disto.
 const ARQUIVO_DIAS = 30;
 
+
+// "R$ 1.234,56" -> 1234.56 (null se nao der pra ler)
+function numPreco(txt) {
+  const limpo = String(txt || '').replace(/[^\d,.]/g, '');
+  if (!limpo) return null;
+  const n = parseFloat(limpo.replace(/\./g, '').replace(',', '.'));
+  return isNaN(n) ? null : n;
+}
+
+// Desconto so existe se o dono informou os DOIS valores e o original e maior que o atual.
+function descontoPct(item) {
+  const atual = numPreco(item.preco);
+  const original = numPreco(item.preco_original);
+  if (atual === null || original === null || original <= atual) return null;
+  const pct = Math.round((1 - atual / original) * 100);
+  return pct >= 1 ? pct : null;
+}
+
 function hoje() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -133,12 +153,16 @@ function montarCardHtml(item, expiraISO) {
   const fotoTag = item.foto_nome
     ? `<img class="photo" src="${item.foto_nome}" alt="${escapeHtml(nome)}" loading="lazy">`
     : `<div class="no-photo">sem foto</div>`;
+  const pct = descontoPct(item);
+  const riscado = pct !== null ? `\n        <span class="was">${escapeHtml(item.preco_original)}</span>` : '';
+  const seloDesconto = pct !== null ? `\n      <span class="tag">-${pct}%</span>` : '';
   const precoBloco = item.preco && String(item.preco).trim()
-    ? `\n      <div class="price-row">\n        <span class="price">${escapeHtml(item.preco)}</span>\n      </div>`
+    ? `\n      <div class="price-row">\n        <span class="price">${escapeHtml(item.preco)}</span>${riscado}\n      </div>`
     : '';
+  const altaAttr = item.alta ? ' data-alta="1"' : '';
 
-  return `    <div class="card" data-cat="${categoria}" data-link="${item.link}" data-expira="${expiraISO}" data-criado="${item.criado_em}">
-      <span class="eyebrow">${CAT_LABEL[categoria]}</span>
+  return `    <div class="card" data-cat="${categoria}"${altaAttr} data-link="${item.link}" data-expira="${expiraISO}" data-criado="${item.criado_em}">
+      <span class="eyebrow">${CAT_LABEL[categoria]}</span>${seloDesconto}
       ${fotoTag}
       <h3>${escapeHtml(nome)}</h3>${precoBloco}
       <span class="source">${escapeHtml(item.plataforma || '')}</span>
@@ -162,34 +186,37 @@ function montarPostBlogHtml({ titulo, descricao, urlPost, contexto, item }) {
 <link rel="manifest" href="../manifest.json">
 <meta name="theme-color" content="#0B0E13">
 <link rel="apple-touch-icon" href="../icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{ --paper:#0B0E13; --paper-raised:#12161E; --ink:#E9EEF3; --ink-soft:#8D98A8; --rule:#232B36; --tag-red:#FF2E7A; --tag-red-ink:#1A0410; --gold:#22E6C8; --savings:#39FF88; --focus:#5B8CFF; --font-mono:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace; }
+  :root{ --paper:#0B0E13; --paper-raised:#12161E; --ink:#E9EEF3; --ink-soft:#8D98A8; --rule:#232B36; --tag-red:#FF2E7A; --tag-red-ink:#1A0410; --gold:#22E6C8; --savings:#39FF88; --focus:#5B8CFF; --font-mono:'JetBrains Mono','Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace; }
   *{box-sizing:border-box;}
-  body{ margin:0; background:var(--paper); color:var(--ink); font-family:'Calibri','Segoe UI',system-ui,sans-serif; -webkit-font-smoothing:antialiased; }
-  .display{ font-family:'Bahnschrift','Arial Narrow',sans-serif; font-variation-settings:'wght' 700, 'wdth' 85; letter-spacing:0.01em; }
+  body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--font-body); -webkit-font-smoothing:antialiased; }
+  .display{ font-family:var(--font-display); letter-spacing:0.01em; }
   a{ color:inherit; }
   :focus-visible{ outline:3px solid var(--focus); outline-offset:2px; }
   .wrap{ max-width:960px; margin:0 auto; padding:28px 20px 60px; }
   .masthead{ position:relative; display:flex; justify-content:space-between; align-items:flex-end; border-bottom:4px solid var(--ink); padding:22px 26px 14px; margin-bottom:6px; gap:16px; flex-wrap:wrap; }
   .masthead h1.display{ font-size:clamp(2.4rem,7vw,4.2rem); margin:0; text-transform:uppercase; text-wrap:balance; line-height:0.9; }
   .masthead .kicker{ font-family:var(--font-mono); text-transform:uppercase; letter-spacing:0.1em; font-size:0.72rem; color:var(--gold); margin-bottom:8px; }
-  .masthead .issue{ text-align:right; font-size:0.85rem; color:var(--ink-soft); font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em; }
+  .masthead .issue{ text-align:right; font-size:0.85rem; color:var(--ink-soft); font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.08em; }
   .frame{ position:absolute; width:16px; height:16px; border:2px solid var(--gold); opacity:0.6; }
   .frame.tl{ top:6px; left:6px; border-right:none; border-bottom:none; }
   .frame.tr{ top:6px; right:6px; border-left:none; border-bottom:none; }
   .rule-row{ display:flex; justify-content:space-between; font-size:0.78rem; color:var(--ink-soft); padding:8px 0 20px; border-bottom:1px dashed var(--rule); margin-bottom:22px; }
   .page{ background:var(--paper-raised); border:1px solid var(--rule); padding:24px 26px; max-width:680px; }
-  .page h1{ font-family:'Bahnschrift','Arial Narrow',sans-serif; font-variation-settings:'wght' 700, 'wdth' 85; font-size:clamp(1.5rem,4vw,2.1rem); line-height:1.15; margin:0 0 14px; }
+  .page h1{ font-family:var(--font-display); font-size:clamp(1.5rem,4vw,2.1rem); line-height:1.15; margin:0 0 14px; }
   .page p{ line-height:1.6; margin:0 0 14px; color:var(--ink); }
   .page .lede{ color:var(--ink-soft); font-style:italic; }
   .preco-box{ display:flex; align-items:center; gap:14px; margin:18px 0; flex-wrap:wrap; }
-  .preco-box .preco{ font-family:'Bahnschrift',sans-serif; font-weight:700; font-size:1.4rem; }
-  .cta{ display:inline-flex; justify-content:space-between; align-items:center; gap:10px; background:var(--gold); color:var(--paper); font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.85rem; padding:11px 18px; text-decoration:none; transition:transform 180ms ease, box-shadow 180ms ease; }
+  .preco-box .preco{ font-family:var(--font-display); font-weight:700; font-size:1.4rem; }
+  .cta{ display:inline-flex; justify-content:space-between; align-items:center; gap:10px; background:var(--gold); color:var(--paper); font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em; font-size:0.85rem; padding:11px 18px; text-decoration:none; transition:transform 180ms ease, box-shadow 180ms ease; }
   .cta:hover, .cta:focus-visible{ box-shadow:0 0 16px rgba(34,230,200,0.5); transform:translateY(-2px); }
   footer{ margin-top:44px; padding-top:18px; border-top:1px dashed var(--rule); display:flex; flex-direction:column; gap:14px; font-size:0.78rem; color:var(--ink-soft); }
   footer .site-nav{ display:flex; flex-wrap:wrap; align-items:center; gap:16px; }
   footer .site-nav a{ text-decoration:none; border-bottom:1px solid var(--rule); }
-  footer .site-nav a.cta-pill{ display:inline-flex; align-items:center; border:1.5px solid var(--tag-red); color:var(--tag-red); padding:5px 14px; border-radius:999px; text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem; font-family:'Bahnschrift',sans-serif; }
+  footer .site-nav a.cta-pill{ display:inline-flex; align-items:center; border:1.5px solid var(--tag-red); color:var(--tag-red); padding:5px 14px; border-radius:999px; text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem; font-family:var(--font-display); }
   .disclosure{ max-width:640px; }
 </style>
 </head>

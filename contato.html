@@ -12,8 +12,11 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B0E13">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root{ --font-display:'Barlow Condensed','Bahnschrift','Arial Narrow',sans-serif; --font-body:'Inter','Segoe UI',system-ui,sans-serif; 
     --paper:#0B0E13;
     --paper-raised:#12161E;
     --ink:#E9EEF3;
@@ -24,7 +27,7 @@
     --gold:#22E6C8;
     --savings:#39FF88;
     --focus:#5B8CFF;
-    --font-mono:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
+    --font-mono:'JetBrains Mono','Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
   }
 
   *{box-sizing:border-box;}
@@ -32,12 +35,11 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Calibri','Segoe UI',system-ui,sans-serif;
+    font-family:var(--font-body);
     -webkit-font-smoothing:antialiased;
   }
   .display{
-    font-family:'Bahnschrift','Arial Narrow',sans-serif;
-    font-variation-settings:'wght' 700, 'wdth' 85;
+    font-family:var(--font-display);
     letter-spacing:0.01em;
   }
   a{color:inherit;}
@@ -66,7 +68,7 @@
   }
   .masthead .issue{
     text-align:right; font-size:0.85rem; color:var(--ink-soft);
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.08em;
   }
   .frame{
     position:absolute; width:16px; height:16px; border:2px solid var(--gold); opacity:0.6;
@@ -98,7 +100,7 @@
     max-width:680px;
   }
   .page h2{
-    font-family:'Bahnschrift',sans-serif;
+    font-family:var(--font-display);
     text-transform:uppercase; letter-spacing:0.06em;
     font-size:1.3rem; margin:0 0 14px;
   }
@@ -122,7 +124,7 @@
     border:1.5px solid var(--tag-red); color:var(--tag-red);
     padding:5px 14px; border-radius:999px;
     text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
-    font-family:'Bahnschrift',sans-serif;
+    font-family:var(--font-display);
     transition:transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
   }
   footer .site-nav a.cta-pill:hover, footer .site-nav a.cta-pill:focus-visible{

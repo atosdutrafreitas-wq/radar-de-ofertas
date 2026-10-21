@@ -356,6 +356,19 @@
             style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
         </label>
         <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Preço original (opcional — só preencha se souber; mostra o desconto)</span>
+          <input type="text" id="oferta-preco-original" placeholder="R$ 59,90"
+            style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
+          <span>Loja</span>
+          <select id="oferta-plataforma" style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
+            <option value="Shopee" selected>Shopee</option>
+            <option value="Mercado Livre">Mercado Livre</option>
+            <option value="Amazon">Amazon</option>
+          </select>
+        </label>
+        <label style="display:flex; flex-direction:column; gap:4px; font-size:0.82rem;">
           <span>Link da foto</span>
           <input type="url" id="oferta-foto" placeholder="https://down-br.img.susercontent.com/..."
             style="padding:8px; border:1px solid var(--rule); border-radius:2px; font-size:0.9rem;">
@@ -374,6 +387,10 @@
             <option value="bebe">Bebê</option>
           </select>
         </label>
+        <label style="display:flex; align-items:center; gap:8px; font-size:0.82rem;">
+          <input type="checkbox" id="oferta-alta">
+          <span>Marcar como "Em Alta"</span>
+        </label>
         <button type="button" class="btn-principal" id="oferta-enviar">Adicionar à fila</button>
         <div id="oferta-status" style="font-size:0.82rem;"></div>
       </div>
@@ -383,6 +400,9 @@
     document.getElementById('oferta-enviar').addEventListener('click', async () => {
       const link = document.getElementById('oferta-link').value.trim();
       const preco = document.getElementById('oferta-preco').value.trim();
+      const precoOriginal = document.getElementById('oferta-preco-original').value.trim();
+      const plataforma = document.getElementById('oferta-plataforma').value;
+      const alta = document.getElementById('oferta-alta').checked;
       const foto = document.getElementById('oferta-foto').value.trim();
       const nome = document.getElementById('oferta-nome').value.trim();
       const categoria = document.getElementById('oferta-categoria').value;
@@ -401,13 +421,17 @@
           foto_nome: foto || null,
           nota: nome || null,
           categoria,
-          plataforma: 'Shopee',
+          preco_original: precoOriginal || null,
+          plataforma,
+          alta,
           criado_em: serverTimestamp()
         });
         status.textContent = 'Enviado! Publica sozinho em alguns minutos.';
         status.style.color = 'var(--ok, green)';
         document.getElementById('oferta-link').value = '';
         document.getElementById('oferta-preco').value = '';
+        document.getElementById('oferta-preco-original').value = '';
+        document.getElementById('oferta-alta').checked = false;
         document.getElementById('oferta-foto').value = '';
         document.getElementById('oferta-nome').value = '';
       } catch (e) {
