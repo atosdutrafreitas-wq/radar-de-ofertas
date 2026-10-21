@@ -1,10 +1,16 @@
 <!DOCTYPE html><html lang="pt-BR"><head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Achados selecionados em Mercado Livre, Shopee e Amazon. Veja as ofertas do Radar de Ofertas e acompanhe pelo Instagram.">
+<link rel="canonical" href="https://atosdutrafreitas-wq.github.io/radar-de-ofertas/">
 <title>Radar de Ofertas</title>
 <meta property="og:title" content="Radar de Ofertas">
 <meta property="og:description" content="Curadoria de ofertas — achados da semana em Mercado Livre, Shopee e Amazon.">
 <meta property="og:url" content="https://atosdutrafreitas-wq.github.io/radar-de-ofertas/">
+<meta property="og:type" content="website">
+<meta property="og:image" content="https://atosdutrafreitas-wq.github.io/radar-de-ofertas/icons/icon-512.png">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"WebSite","name":"Radar de Ofertas","url":"https://atosdutrafreitas-wq.github.io/radar-de-ofertas/","inLanguage":"pt-BR"}</script>
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B0E13">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
@@ -287,6 +293,28 @@
   .advertiser-banner p{ margin:0; color:var(--ink-soft); font-size:0.9rem; max-width:480px; }
   .advertiser-banner .cta{ margin-top:6px; justify-content:center; gap:8px; }
 
+  /* ordenacao, secao de ofertas antigas e compartilhar */
+  .toolbar{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:26px; }
+  .toolbar .filters{ margin-bottom:0; }
+  .ordem{ display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--ink-soft); font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.06em; }
+  .ordem select{ background:var(--paper-raised); color:var(--ink); border:1.5px solid var(--rule); padding:7px 10px; font-family:inherit; font-size:0.82rem; border-radius:2px; }
+  .titulo-arquivo{ grid-column:1 / -1; margin:14px 0 0; padding-top:14px; border-top:1px dashed var(--rule); }
+  .titulo-arquivo h2{ margin:0 0 4px; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:1rem; }
+  .titulo-arquivo p{ margin:0; font-size:0.82rem; color:var(--ink-soft); }
+  .card[data-status="arquivada"] .photo{ filter:grayscale(0.55); }
+  .card .aviso-arquivo{ font-size:0.74rem; color:var(--tag-red); }
+  .card .share{ font-size:0.74rem; color:var(--ink-soft); text-decoration:none; border-bottom:1px solid var(--rule); align-self:flex-start; }
+  .card .share:hover, .card .share:focus-visible{ color:var(--gold); }
+  .vazio-geral{ grid-column:1 / -1; border:1px dashed var(--rule); padding:26px 20px; text-align:center; color:var(--ink-soft); font-size:0.9rem; line-height:1.5; }
+  .captura-banner .links-canais{ display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+  .captura-banner .links-canais a{
+    display:inline-flex; align-items:center; gap:8px; text-decoration:none;
+    background:var(--gold); color:var(--paper);
+    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.8rem;
+    padding:9px 14px;
+  }
+  .captura-banner .links-canais a:hover, .captura-banner .links-canais a:focus-visible{ box-shadow:0 0 16px rgba(34,230,200,0.5); }
+
   @media (prefers-reduced-motion:no-preference){
     .card{ transition:transform .15s ease, box-shadow .15s ease; }
     .card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.12); }
@@ -325,19 +353,29 @@
       <button type="submit" class="cta">Quero receber <span aria-hidden="true">→</span></button>
     </form>
     <div class="captura-feedback" id="captura-feedback" role="status" aria-live="polite"></div>
+    <div class="links-canais" id="links-canais"></div>
   </div>
 
   <label class="busca-campo">
     <input type="text" id="busca-input" placeholder="Buscar produto ou serviço (3+ letras)…" autocomplete="off">
   </label>
 
-  <div class="filters" id="filters">
-    <button class="active" data-cat="all">Todos</button>
-    <button data-cat="alta">Em Alta</button>
-    <button data-cat="tech">Tech</button>
-    <button data-cat="casa">Casa</button>
-    <button data-cat="beleza">Beleza</button>
-    <button data-cat="bebe">Bebê</button>
+  <div class="toolbar">
+    <div class="filters" id="filters">
+      <button class="active" data-cat="all">Todos</button>
+      <button data-cat="alta">Em Alta</button>
+      <button data-cat="tech">Tech</button>
+      <button data-cat="casa">Casa</button>
+      <button data-cat="beleza">Beleza</button>
+      <button data-cat="bebe">Bebê</button>
+    </div>
+    <label class="ordem">Ordenar
+      <select id="ordem">
+        <option value="recentes">Mais recentes</option>
+        <option value="menor">Menor preço</option>
+        <option value="maior">Maior preço</option>
+      </select>
+    </label>
   </div>
   <div class="vazio-busca" id="vazio-busca" style="display:none;">Nada encontrado por aqui ainda — tenta outro termo.</div>
 
@@ -496,6 +534,111 @@
       card.appendChild(selo);
     }
   });
+</script>
+<script src="site-config.js"></script>
+<script>
+  // Canais (Telegram/WhatsApp) — so aparecem se preenchidos em site-config.js
+  (function () {
+    var c = window.SITE_CONFIG || {};
+    var box = document.getElementById('links-canais');
+    function add(txt, href) {
+      if (!href) return;
+      var a = document.createElement('a');
+      a.className = 'cta'; a.href = href; a.target = '_blank'; a.rel = 'noopener';
+      a.textContent = txt;
+      box.appendChild(a);
+    }
+    add('Entrar no canal do Telegram', c.telegram);
+    add('Falar no WhatsApp', c.whatsapp);
+  })();
+
+  // Ofertas: separa as ativas (ate 48h) das publicadas recentemente, ordena e adiciona "compartilhar"
+  (function () {
+    var grid = document.getElementById('grid');
+    var select = document.getElementById('ordem');
+    var cardsTodos = Array.prototype.slice.call(grid.querySelectorAll('.card'));
+
+    function preco(card) {
+      var el = card.querySelector('.price');
+      if (!el) return null;
+      var n = parseFloat(el.textContent.replace(/[^\d,]/g, '').replace(',', '.'));
+      return isNaN(n) ? null : n;
+    }
+    function criado(card) {
+      var t = new Date(card.getAttribute('data-criado')).getTime();
+      return isNaN(t) ? 0 : t;
+    }
+
+    if (!cardsTodos.length) {
+      var vazio = document.createElement('div');
+      vazio.className = 'vazio-geral';
+      vazio.textContent = 'Novas ofertas entram aqui assim que forem selecionadas. Enquanto isso, deixe seu contato acima ou siga o Radar no Instagram.';
+      grid.appendChild(vazio);
+      return;
+    }
+
+    var agora = Date.now();
+    cardsTodos.forEach(function (card) {
+      var exp = new Date(card.getAttribute('data-expira')).getTime();
+      var arquivada = !isNaN(exp) && exp < agora;
+      card.setAttribute('data-status', arquivada ? 'arquivada' : 'ativa');
+      if (arquivada) {
+        var aviso = document.createElement('span');
+        aviso.className = 'aviso-arquivo';
+        aviso.textContent = 'Publicada há mais de 48 h — o preço pode ter mudado, confira na loja.';
+        var cta = card.querySelector('.cta');
+        if (cta) card.insertBefore(aviso, cta); else card.appendChild(aviso);
+      }
+      var link = card.getAttribute('data-link');
+      if (link) {
+        var nome = (card.querySelector('h3') || {}).textContent || 'Oferta';
+        var p = card.querySelector('.price');
+        var msg = nome + (p ? ' — ' + p.textContent : '') + '\n' + link;
+        var a = document.createElement('a');
+        a.className = 'share';
+        a.href = 'https://wa.me/?text=' + encodeURIComponent(msg);
+        a.target = '_blank'; a.rel = 'noopener';
+        a.textContent = 'Compartilhar no WhatsApp';
+        card.appendChild(a);
+      }
+    });
+
+    var titulo = document.createElement('div');
+    titulo.className = 'titulo-arquivo';
+    titulo.id = 'titulo-arquivo';
+    titulo.innerHTML = '<h2>Publicadas recentemente</h2><p>Ofertas que já passaram de 48 horas. Os preços podem ter mudado.</p>';
+
+    function ordenar() {
+      var modo = select.value;
+      function cmp(a, b) {
+        if (modo === 'menor' || modo === 'maior') {
+          var pa = preco(a), pb = preco(b);
+          if (pa === null && pb !== null) return 1;
+          if (pb === null && pa !== null) return -1;
+          if (pa !== null && pb !== null && pa !== pb) return modo === 'menor' ? pa - pb : pb - pa;
+        }
+        return criado(b) - criado(a);
+      }
+      var ativas = cardsTodos.filter(function (c) { return c.getAttribute('data-status') === 'ativa'; }).sort(cmp);
+      var arquivadas = cardsTodos.filter(function (c) { return c.getAttribute('data-status') === 'arquivada'; }).sort(cmp);
+      ativas.forEach(function (c) { grid.appendChild(c); });
+      if (arquivadas.length) {
+        grid.appendChild(titulo);
+        arquivadas.forEach(function (c) { grid.appendChild(c); });
+      }
+      atualizarTituloArquivo();
+    }
+    function atualizarTituloArquivo() {
+      var algum = cardsTodos.some(function (c) {
+        return c.getAttribute('data-status') === 'arquivada' && c.style.display !== 'none';
+      });
+      titulo.style.display = algum ? '' : 'none';
+    }
+    select.addEventListener('change', ordenar);
+    document.getElementById('filters').addEventListener('click', function () { setTimeout(atualizarTituloArquivo, 0); });
+    document.getElementById('busca-input').addEventListener('input', function () { setTimeout(atualizarTituloArquivo, 0); });
+    ordenar();
+  })();
 </script>
 <script type="module" src="cliques.js"></script>
 <script type="module" src="captura.js"></script>

@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Fale com o Radar de Ofertas pelos canais de contato do site.">
+<link rel="canonical" href="https://atosdutrafreitas-wq.github.io/radar-de-ofertas/contato.html">
 <title>Contato — Radar de Ofertas</title>
 <meta property="og:title" content="Contato — Radar de Ofertas">
-<meta property="og:description" content="Fale com o Radar de Ofertas — canal de contato em breve.">
+<meta property="og:description" content="Fale com o Radar de Ofertas pelos canais de contato do site.">
 <meta property="og:url" content="https://atosdutrafreitas-wq.github.io/radar-de-ofertas/contato.html">
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B0E13">
@@ -160,9 +162,30 @@
 
   <div class="page">
     <h2>Contato</h2>
-    <p class="lede">Quer falar com o Radar de Ofertas? Em breve teremos um canal direto por aqui.</p>
-    <p class="note-box">Estamos organizando um canal de contato pelo Instagram — em breve. Por enquanto, fique de olho nas atualizações do site para o link assim que estiver disponível.</p>
+    <p class="lede">Quer falar com o Radar de Ofertas? Escolha um canal abaixo.</p>
+    <ul id="canais-contato" style="line-height:2; padding-left:18px;"></ul>
     <p>Se você é uma marca ou loja interessada em divulgar um produto ou promoção, veja a página <a href="anuncie.html">Anuncie Aqui</a>.</p>
+    <script src="site-config.js"></script>
+    <script>
+      (function () {
+        var c = window.SITE_CONFIG || {};
+        var ul = document.getElementById('canais-contato');
+        function add(rotulo, href, texto) {
+          if (!href) return;
+          var li = document.createElement('li');
+          var a = document.createElement('a');
+          a.href = href; a.textContent = texto;
+          if (href.indexOf('http') === 0) { a.target = '_blank'; a.rel = 'noopener'; }
+          li.appendChild(document.createTextNode(rotulo + ': '));
+          li.appendChild(a);
+          ul.appendChild(li);
+        }
+        add('Instagram', c.instagram, '@radar_ofertass2026');
+        add('Telegram', c.telegram, 'canal de ofertas');
+        add('WhatsApp', c.whatsapp, 'chamar no WhatsApp');
+        add('E-mail', c.email ? 'mailto:' + c.email : '', c.email);
+      })();
+    </script>
   </div>
 
   <footer>

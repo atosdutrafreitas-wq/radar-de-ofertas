@@ -25,6 +25,77 @@ const CONTEXTO_CATEGORIA = {
   bebe: 'Pra produtos infantis, segurança e conforto vêm antes de qualquer outro critério — confira se o material é apropriado pra idade da criança e a tabela de tamanho/faixa etária informada pelo vendedor, já que costuma variar bastante entre fornecedores.'
 };
 
+
+// Titulos vindos de marketplaces chegam com entidades quebradas ("E # 39 ; s") e espacos
+// antes de pontuacao. Limpa so isso — nunca reescreve o nome que o dono informou.
+function limparTexto(t) {
+  return String(t || '')
+    .replace(/&amp;#39;|&#39;/g, "'")
+    .replace(/\s*#\s*39\s*;\s*/g, "'")
+    .replace(/\s+([,.;:!?])/g, '$1')
+    .replace(/\s{2,}/g, ' ')
+    .trim();
+}
+
+function nomeOferta(item) {
+  return item.nota && item.nota.trim() ? limparTexto(item.nota) : labelFallback(item);
+}
+
+// Aviso opcional no Telegram (gratuito). So roda se TELEGRAM_BOT_TOKEN e TELEGRAM_CHAT_ID
+// existirem como secrets do repositorio; sem eles, nada e enviado e o resto segue normal.
+async function enviarTelegram(item) {
+  const token = process.env.TELEGRAM_BOT_TOKEN;
+  const chat = process.env.TELEGRAM_CHAT_ID;
+  if (!token || !chat) return;
+  const nome = nomeOferta(item);
+  const linhas = [
+    `🔥 <b>${escapeHtml(nome)}</b>`,
+    item.preco && String(item.preco).trim() ? `💰 ${escapeHtml(item.preco)}` : null,
+    item.plataforma ? `🛒 ${escapeHtml(item.plataforma)}` : null,
+    `👉 ${escapeHtml(item.link)}`,
+    '',
+    '<i>Como afiliado, posso ganhar comissão sem custo extra pra você. O preço pode mudar: confira na loja.</i>'
+  ].filter(l => l !== null);
+  const texto = linhas.join('\n');
+  const usaFoto = item.foto_nome && /^https?:\/\//.test(item.foto_nome) && !/\.webp(\?|$)/i.test(item.foto_nome);
+  const url = `https://api.telegram.org/bot${token}/${usaFoto ? 'sendPhoto' : 'sendMessage'}`;
+  const corpo = usaFoto
+    ? { chat_id: chat, photo: item.foto_nome, caption: texto.slice(0, 1000), parse_mode: 'HTML' }
+    : { chat_id: chat, text: texto, parse_mode: 'HTML', disable_web_page_preview: false };
+  try {
+    let r = await fetch(url, { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(corpo) });
+    if (!r.ok && usaFoto) {
+      // foto recusada pelo Telegram: cai para texto simples
+      r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
+        method: 'POST', headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ chat_id: chat, text: texto, parse_mode: 'HTML' })
+      });
+    }
+    console.log(r.ok ? `Telegram: enviado "${nome}".` : `Telegram: falhou (${r.status}) para "${nome}".`);
+  } catch (e) {
+    console.log(`Telegram: erro de rede (${e.message}) — seguindo sem enviar.`);
+  }
+}
+
+// sitemap.xml deterministico (sem datas) para so gerar diff quando algo muda de verdade.
+function gerarSitemap() {
+  const paginas = ['', 'sobre.html', 'servicos.html', 'anuncie.html', 'cadastro-anunciante.html',
+    'contato.html', 'faq.html', 'politica-afiliados.html', 'privacidade.html', 'blog/'];
+  if (fs.existsSync(BLOG_DIR)) {
+    fs.readdirSync(BLOG_DIR).filter(f => f.endsWith('.html') && f !== 'index.html').sort().forEach(f => {
+      const html = fs.readFileSync(path.join(BLOG_DIR, f), 'utf8');
+      if (!/Rascunho — não publicado/.test(html)) paginas.push(`blog/${f}`);
+    });
+  }
+  const xml = '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n' +
+    paginas.map(p => `  <url><loc>${SITE_URL}/${p}</loc></url>`).join('\n') + '\n</urlset>\n';
+  const alvo = path.join(REPO, 'sitemap.xml');
+  if (!fs.existsSync(alvo) || fs.readFileSync(alvo, 'utf8') !== xml) fs.writeFileSync(alvo, xml);
+}
+
+// Ofertas expiradas (48h) ficam no site como "publicadas recentemente" e so saem depois disto.
+const ARQUIVO_DIAS = 30;
+
 function hoje() {
   return new Date().toISOString().slice(0, 10);
 }
@@ -58,7 +129,7 @@ function slugify(texto) {
 
 function montarCardHtml(item, expiraISO) {
   const categoria = CAT_LABEL[item.categoria] ? item.categoria : CAT_PADRAO;
-  const nome = item.nota && item.nota.trim() ? item.nota.trim() : labelFallback(item);
+  const nome = nomeOferta(item);
   const fotoTag = item.foto_nome
     ? `<img class="photo" src="${item.foto_nome}" alt="${escapeHtml(nome)}" loading="lazy">`
     : `<div class="no-photo">sem foto</div>`;
@@ -173,7 +244,7 @@ function montarPostBlogHtml({ titulo, descricao, urlPost, contexto, item }) {
 
 function gerarPostBlog(item) {
   const categoria = CAT_LABEL[item.categoria] ? item.categoria : CAT_PADRAO;
-  const nome = item.nota && item.nota.trim() ? item.nota.trim() : labelFallback(item);
+  const nome = nomeOferta(item);
   const titulo = `${nome} — o que considerar antes de comprar`;
   const descricao = `${nome}: critérios reais de compra pra essa categoria, com a oferta atual.`;
   const slugBase = slugify(nome) || slugify(item.plataforma) || 'oferta';
@@ -236,6 +307,7 @@ async function lerItensPendentesFirestore() {
 }
 
 async function main() {
+  gerarSitemap();
   const pendentesArquivo = lerItensPendentesArquivo();
   const { itens: pendentesFirestore, db } = await lerItensPendentesFirestore();
   const pendentes = [...pendentesArquivo, ...pendentesFirestore];
@@ -246,8 +318,9 @@ async function main() {
   // 1) Remove cards expirados
   let removidos = [];
   $grid.find('.card[data-expira]').each((_, el) => {
-    const exp = $(el).attr('data-expira');
-    if (exp && new Date(exp).getTime() < Date.now()) {
+    const base = $(el).attr('data-criado') || $(el).attr('data-expira');
+    const limite = new Date(base).getTime() + ARQUIVO_DIAS * 24 * 3600 * 1000;
+    if (base && limite < Date.now()) {
       const titulo = $(el).find('h3').first().text();
       removidos.push(titulo);
       $(el).remove();
@@ -257,6 +330,7 @@ async function main() {
   // 2) Publica itens novos da fila (arquivos em fila/ + docs em fila_pendente no Firestore)
   let publicados = [];
   const novosPostsBlogHtml = [];
+  const itensParaTelegram = [];
   if (pendentes.length) {
     fs.mkdirSync(PROCESSADOS_DIR, { recursive: true });
     const novosCardsHtml = [];
@@ -273,9 +347,10 @@ async function main() {
       const item = { ...dados, criado_em: criado };
 
       novosCardsHtml.push(montarCardHtml(item, expira));
+      itensParaTelegram.push(item);
       novosPostsBlogHtml.push(gerarPostBlog(item));
 
-      const nomeFinal = item.nota && item.nota.trim() ? item.nota.trim() : labelFallback(item);
+      const nomeFinal = nomeOferta(item);
       publicados.push(`"${nomeFinal}"${item.preco ? ` (${item.preco})` : ''}`);
 
       if (item.nota && item.preco) {
@@ -315,6 +390,7 @@ async function main() {
   }
 
   fs.writeFileSync(INDEX_PATH, $.html());
+  for (const it of itensParaTelegram) await enviarTelegram(it);
 
   if (novosPostsBlogHtml.length && fs.existsSync(BLOG_INDEX_PATH)) {
     const $blog = cheerio.load(fs.readFileSync(BLOG_INDEX_PATH, 'utf8'), { decodeEntities: false });
@@ -325,7 +401,7 @@ async function main() {
 
   const partes = [];
   if (publicados.length) partes.push(`publicados ${publicados.length} item(ns): ${publicados.join(', ')}`);
-  if (removidos.length) partes.push(`removidos ${removidos.length} card(s) expirado(s): ${removidos.join(', ')}`);
+  if (removidos.length) partes.push(`removidos ${removidos.length} card(s) com mais de ${ARQUIVO_DIAS} dias: ${removidos.join(', ')}`);
   if (novosPostsBlogHtml.length) partes.push(`gerados ${novosPostsBlogHtml.length} post(s) no blog`);
   logHistorico(partes.join('. ') + '.');
 }
