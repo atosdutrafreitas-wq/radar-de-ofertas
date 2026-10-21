@@ -3,6 +3,6 @@
 window.SITE_CONFIG = {
   instagram: "https://www.instagram.com/radar_ofertass2026/",
   telegram: "",   // ex.: "https://t.me/nome_do_seu_canal"
-  whatsapp: "",   // ex.: "https://wa.me/55DDDNUMERO" (so digitos, com 55 + DDD)
+  whatsapp: "https://wa.me/5551999882102",
   email: ""       // ex.: "contato@seudominio.com"
 };
