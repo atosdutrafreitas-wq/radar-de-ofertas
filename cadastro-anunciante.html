@@ -12,8 +12,11 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B0E13">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root{ --font-display:'Barlow Condensed','Bahnschrift','Arial Narrow',sans-serif; --font-body:'Inter','Segoe UI',system-ui,sans-serif; 
     --paper:#0B0E13;
     --paper-raised:#12161E;
     --ink:#E9EEF3;
@@ -24,7 +27,7 @@
     --gold:#22E6C8;
     --savings:#39FF88;
     --focus:#5B8CFF;
-    --font-mono:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
+    --font-mono:'JetBrains Mono','Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
   }
 
   *{box-sizing:border-box;}
@@ -32,12 +35,11 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Calibri','Segoe UI',system-ui,sans-serif;
+    font-family:var(--font-body);
     -webkit-font-smoothing:antialiased;
   }
   .display{
-    font-family:'Bahnschrift','Arial Narrow',sans-serif;
-    font-variation-settings:'wght' 700, 'wdth' 85;
+    font-family:var(--font-display);
     letter-spacing:0.01em;
   }
   a{color:inherit;}
@@ -65,7 +67,7 @@
   }
   .masthead .issue{
     text-align:right; font-size:0.85rem; color:var(--ink-soft);
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.08em;
   }
   .frame{
     position:absolute; width:16px; height:16px; border:2px solid var(--gold); opacity:0.6;
@@ -96,7 +98,7 @@
     max-width:560px;
   }
   .page h2{
-    font-family:'Bahnschrift',sans-serif;
+    font-family:var(--font-display);
     text-transform:uppercase; letter-spacing:0.06em;
     font-size:1.3rem; margin:0 0 14px;
   }
@@ -106,14 +108,14 @@
   form{ display:flex; flex-direction:column; gap:16px; }
   fieldset{ border:none; padding:0; margin:0; display:flex; gap:10px; }
   fieldset legend{
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.06em;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.06em;
     font-size:0.78rem; color:var(--ink-soft); padding:0; margin-bottom:8px; width:100%;
   }
   .tipo-opcoes{ display:flex; gap:10px; width:100%; }
   .tipo-opcoes label{
     flex:1; text-align:center; cursor:pointer;
     border:1.5px solid var(--rule); padding:10px; border-radius:2px;
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; font-size:0.78rem; letter-spacing:0.04em;
+    font-family:var(--font-display); text-transform:uppercase; font-size:0.78rem; letter-spacing:0.04em;
   }
   .tipo-opcoes input{ position:absolute; opacity:0; pointer-events:none; }
   .tipo-opcoes input:checked + span{ color:var(--paper); }
@@ -121,7 +123,7 @@
 
   label.campo{ display:flex; flex-direction:column; gap:6px; font-size:0.85rem; color:var(--ink-soft); }
   label.campo span.rotulo{
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
   }
   input[type="text"], input[type="url"], input[type="tel"], textarea, select{
     background:var(--paper); border:1.5px solid var(--rule); color:var(--ink);
@@ -137,7 +139,7 @@
   button[type="submit"]{
     margin-top:8px;
     background:var(--gold); color:var(--paper); border:none;
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.85rem;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em; font-size:0.85rem;
     padding:12px; cursor:pointer; border-radius:2px;
     transition:transform 180ms ease, box-shadow 180ms ease;
   }
@@ -164,7 +166,7 @@
     border:1.5px solid var(--tag-red); color:var(--tag-red);
     padding:5px 14px; border-radius:999px;
     text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
-    font-family:'Bahnschrift',sans-serif;
+    font-family:var(--font-display);
   }
   footer .bottom-row{ display:flex; justify-content:space-between; flex-wrap:wrap; gap:12px; }
   footer .social{ display:flex; align-items:center; gap:12px; }

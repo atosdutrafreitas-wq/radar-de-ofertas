@@ -14,8 +14,11 @@
 <link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0B0E13">
 <link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet">
 <style>
-  :root{
+  :root{ --font-display:'Barlow Condensed','Bahnschrift','Arial Narrow',sans-serif; --font-body:'Inter','Segoe UI',system-ui,sans-serif; 
     --paper:#0B0E13;
     --paper-raised:#12161E;
     --ink:#E9EEF3;
@@ -26,7 +29,7 @@
     --gold:#22E6C8;
     --savings:#39FF88;
     --focus:#5B8CFF;
-    --font-mono:'Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
+    --font-mono:'JetBrains Mono','Cascadia Code','Consolas','SFMono-Regular',Menlo,monospace;
   }
 
   *{box-sizing:border-box;}
@@ -34,12 +37,11 @@
     margin:0;
     background:var(--paper);
     color:var(--ink);
-    font-family:'Calibri','Segoe UI',system-ui,sans-serif;
+    font-family:var(--font-body);
     -webkit-font-smoothing:antialiased;
   }
   .display{
-    font-family:'Bahnschrift','Arial Narrow',sans-serif;
-    font-variation-settings:'wght' 700, 'wdth' 85;
+    font-family:var(--font-display);
     letter-spacing:0.01em;
   }
   a{color:inherit;}
@@ -68,7 +70,7 @@
   }
   .masthead .issue{
     text-align:right; font-size:0.85rem; color:var(--ink-soft);
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.08em;
   }
   .frame{
     position:absolute; width:16px; height:16px; border:2px solid var(--gold); opacity:0.6;
@@ -120,7 +122,7 @@
     display:flex; flex-wrap:wrap; gap:8px; margin-bottom:26px;
   }
   .filters button{
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.06em;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.06em;
     font-size:0.76rem; padding:7px 14px;
     background:transparent; border:1.5px solid var(--ink); color:var(--ink);
     cursor:pointer; border-radius:2px;
@@ -151,7 +153,7 @@
   .card .tag{
     position:absolute; top:0; right:0;
     background:var(--tag-red); color:var(--tag-red-ink);
-    font-family:'Bahnschrift',sans-serif; font-weight:700;
+    font-family:var(--font-display); font-weight:700;
     font-size:0.72rem; padding:4px 9px 3px;
     clip-path:polygon(0 0,100% 0,100% 100%,0 0);
     line-height:1.3;
@@ -159,7 +161,7 @@
   .card .tag-novo{
     position:absolute; top:0; left:0;
     background:var(--savings); color:var(--tag-red-ink);
-    font-family:'Bahnschrift',sans-serif; font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
+    font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:0.04em;
     font-size:0.68rem; padding:4px 10px 3px;
     clip-path:polygon(0 0,100% 0,calc(100% - 12px) 100%,0 100%);
     line-height:1.3;
@@ -177,7 +179,7 @@
   }
   @media (prefers-reduced-motion:reduce){ .card .tag-novo::after{ animation:none; display:none; } }
   .card .eyebrow{
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.1em;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.1em;
     font-size:0.68rem; color:var(--ink-soft);
   }
   .card h3{ margin:0; font-size:1.05rem; line-height:1.25; text-wrap:balance;}
@@ -189,15 +191,15 @@
     display:flex; align-items:baseline; gap:8px; margin-top:auto; padding-top:6px;
     font-variant-numeric:tabular-nums;
   }
-  .card .price{ font-family:'Bahnschrift',sans-serif; font-weight:700; font-size:1.3rem; }
+  .card .price{ font-family:var(--font-display); font-weight:700; font-size:1.3rem; }
   .card .was{ text-decoration:line-through; color:var(--ink-soft); font-size:0.82rem; }
-  .card .savings{ color:var(--savings); font-size:0.76rem; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.04em; }
+  .card .savings{ color:var(--savings); font-size:0.76rem; font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.04em; }
   .card .source{ font-size:0.72rem; color:var(--ink-soft); text-transform:uppercase; letter-spacing:0.05em; margin-top:auto; }
-  .card .timestamp{ font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; color:var(--ink-soft); }
+  .card .timestamp{ font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.08em; font-size:0.68rem; color:var(--ink-soft); }
   .card .cta{
     margin-top:8px; display:inline-flex; justify-content:space-between; align-items:center;
     background:var(--gold); color:var(--paper);
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.8rem;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em; font-size:0.8rem;
     padding:9px 12px; text-decoration:none;
     transition:transform 180ms ease, box-shadow 180ms ease;
   }
@@ -230,7 +232,7 @@
     border:1.5px solid var(--tag-red); color:var(--tag-red);
     padding:5px 14px; border-radius:999px;
     text-transform:uppercase; letter-spacing:0.05em; font-size:0.72rem;
-    font-family:'Bahnschrift',sans-serif;
+    font-family:var(--font-display);
     transition:transform 180ms ease, box-shadow 180ms ease, background 180ms ease, color 180ms ease;
   }
   footer .site-nav a.cta-pill:hover, footer .site-nav a.cta-pill:focus-visible{
@@ -264,7 +266,7 @@
   }
   @media (prefers-reduced-motion:reduce){ .captura-banner{ animation:none; } }
   .captura-banner h2{
-    margin:0; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    margin:0; font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.04em;
     font-size:1.05rem; color:var(--gold);
   }
   .captura-banner p{ margin:0; color:var(--ink-soft); font-size:0.88rem; max-width:480px; }
@@ -287,7 +289,7 @@
     display:flex; flex-direction:column; align-items:center; gap:8px;
   }
   .advertiser-banner h2{
-    margin:0; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.04em;
+    margin:0; font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.04em;
     font-size:1.15rem; color:var(--tag-red);
   }
   .advertiser-banner p{ margin:0; color:var(--ink-soft); font-size:0.9rem; max-width:480px; }
@@ -296,10 +298,10 @@
   /* ordenacao, secao de ofertas antigas e compartilhar */
   .toolbar{ display:flex; flex-wrap:wrap; gap:12px; align-items:center; justify-content:space-between; margin-bottom:26px; }
   .toolbar .filters{ margin-bottom:0; }
-  .ordem{ display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--ink-soft); font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.06em; }
+  .ordem{ display:flex; align-items:center; gap:8px; font-size:0.78rem; color:var(--ink-soft); font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.06em; }
   .ordem select{ background:var(--paper-raised); color:var(--ink); border:1.5px solid var(--rule); padding:7px 10px; font-family:inherit; font-size:0.82rem; border-radius:2px; }
   .titulo-arquivo{ grid-column:1 / -1; margin:14px 0 0; padding-top:14px; border-top:1px dashed var(--rule); }
-  .titulo-arquivo h2{ margin:0 0 4px; font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:1rem; }
+  .titulo-arquivo h2{ margin:0 0 4px; font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em; font-size:1rem; }
   .titulo-arquivo p{ margin:0; font-size:0.82rem; color:var(--ink-soft); }
   .card[data-status="arquivada"] .photo{ filter:grayscale(0.55); }
   .card .aviso-arquivo{ font-size:0.74rem; color:var(--tag-red); }
@@ -310,7 +312,7 @@
   .captura-banner .links-canais a{
     display:inline-flex; align-items:center; gap:8px; text-decoration:none;
     background:var(--gold); color:var(--paper);
-    font-family:'Bahnschrift',sans-serif; text-transform:uppercase; letter-spacing:0.05em; font-size:0.8rem;
+    font-family:var(--font-display); text-transform:uppercase; letter-spacing:0.05em; font-size:0.8rem;
     padding:9px 14px;
   }
   .captura-banner .links-canais a:hover, .captura-banner .links-canais a:focus-visible{ box-shadow:0 0 16px rgba(34,230,200,0.5); }
@@ -318,6 +320,66 @@
   @media (prefers-reduced-motion:no-preference){
     .card{ transition:transform .15s ease, box-shadow .15s ease; }
     .card:hover{ transform:translateY(-3px); box-shadow:0 8px 18px rgba(0,0,0,0.12); }
+  }
+
+  /* ===== v2: ofertas primeiro, textos maiores, cards com desconto ===== */
+  :root{ --ink-soft:#A8B3C2; }
+  .wrap{ padding:18px 16px 48px; }
+  .masthead{ padding:14px 18px 10px; }
+  .masthead h1{ font-size:clamp(1.9rem,6vw,3rem); line-height:1; }
+  .masthead .kicker{ font-size:0.7rem; margin-bottom:4px; }
+  .masthead .issue{ font-size:0.8rem; }
+  .rule-row{ padding:6px 0 12px; margin-bottom:14px; font-size:0.82rem; }
+  .canais-topo{ display:flex; flex-wrap:wrap; gap:8px; margin-bottom:14px; }
+  .canais-topo:empty{ display:none; }
+  .canais-topo a{
+    display:inline-flex; align-items:center; text-decoration:none;
+    background:var(--gold); color:var(--paper);
+    font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+    font-size:0.9rem; padding:8px 14px;
+  }
+  .canais-topo a:hover, .canais-topo a:focus-visible{ box-shadow:0 0 16px rgba(34,230,200,0.5); }
+  .busca-campo input{ padding:13px 14px; font-size:1rem; }
+  .filters{ margin-bottom:0; }
+  .filters button{ font-size:0.85rem; padding:9px 14px; }
+  .toolbar{ margin-bottom:18px; }
+  .card .eyebrow{ font-size:0.74rem; }
+  .card h3{ font-size:1.08rem; }
+  .card .price-row{ flex-wrap:wrap; }
+  .card .price{ font-size:1.55rem; }
+  .card .was{ font-size:0.92rem; }
+  .card .source{ font-size:0.78rem; }
+  .card .timestamp{ font-size:0.74rem; }
+  .card .cta{ padding:12px 14px; font-size:0.95rem; font-weight:700; }
+  .card .tag{
+    top:40px; right:18px; z-index:2; clip-path:none; border-radius:2px;
+    font-family:var(--font-display); font-weight:700; font-size:1rem; padding:3px 9px; line-height:1.2;
+  }
+  .card .tag-novo{ top:40px; left:18px; z-index:2; clip-path:none; border-radius:2px; }
+  .captura-form button{
+    background:var(--gold); color:var(--paper); border:none; cursor:pointer;
+    font-family:var(--font-display); font-weight:700; text-transform:uppercase; letter-spacing:0.05em;
+    font-size:0.95rem; padding:12px 20px;
+  }
+  .captura-form button:hover, .captura-form button:focus-visible{ box-shadow:0 0 16px rgba(34,230,200,0.5); }
+  .captura-form button:disabled{ opacity:0.6; cursor:default; }
+  @media (max-width:560px){
+    .canais-topo a{ flex:1 1 0; justify-content:center; text-align:center; font-size:0.82rem; padding:9px 6px; }
+  }
+  .captura-banner{ margin-top:34px; }
+  .advertiser-banner{ margin-top:0; }
+  @media (max-width:560px){
+    .grid{ grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; }
+    .card{ padding:10px; gap:6px; }
+    .card h3{ font-size:0.95rem; }
+    .card .price{ font-size:1.3rem; }
+    .card .cta{ padding:10px 8px; font-size:0.85rem; }
+    .card .tag{ top:34px; right:12px; font-size:0.9rem; }
+    .card .tag-novo{ top:34px; left:12px; }
+    .card .share{ font-size:0.7rem; }
+    .toolbar{ flex-direction:column; align-items:stretch; }
+    .ordem{ justify-content:space-between; }
+    .masthead{ padding:12px 12px 8px; }
   }
 </style>
 </head>
@@ -340,21 +402,7 @@
     <span>Ofertas selecionadas</span>
   </div>
 
-  <div class="captura-banner" id="captura-banner">
-    <h2>Não perca nenhum achado</h2>
-    <p>Deixa seu e-mail ou WhatsApp aqui que a gente te avisa quando sair oferta boa.</p>
-    <form id="captura-form" class="captura-form" novalidate="">
-      <label class="busca-campo">
-        <input type="text" id="captura-contato" placeholder="Seu e-mail ou WhatsApp" autocomplete="off" required="">
-      </label>
-      <label class="busca-campo">
-        <input type="text" id="captura-nome" placeholder="Nome (opcional)" autocomplete="off">
-      </label>
-      <button type="submit" class="cta">Quero receber <span aria-hidden="true">→</span></button>
-    </form>
-    <div class="captura-feedback" id="captura-feedback" role="status" aria-live="polite"></div>
-    <div class="links-canais" id="links-canais"></div>
-  </div>
+  <div class="canais-topo" id="links-canais"></div>
 
   <label class="busca-campo">
     <input type="text" id="busca-input" placeholder="Buscar produto ou serviço (3+ letras)…" autocomplete="off">
@@ -378,12 +426,6 @@
     </label>
   </div>
   <div class="vazio-busca" id="vazio-busca" style="display:none;">Nada encontrado por aqui ainda — tenta outro termo.</div>
-
-  <div class="advertiser-banner">
-    <h2>Sua marca pode estar aqui</h2>
-    <p>Alcance quem já está pronto pra comprar — anúncio sempre identificado, nunca misturado aos achados.</p>
-    <a class="cta" href="anuncie.html">Anuncie Aqui <span aria-hidden="true">→</span></a>
-  </div>
 
   <div class="grid" id="grid">    
     
@@ -415,6 +457,27 @@
       <a class="cta" href="LINK_DO_ANUNCIO" target="_blank" rel="noopener sponsored"
          data-anuncio-id="ID_DO_ANUNCIO" data-parceiro-id="ID_DO_PARCEIRO">Ver oferta</a>
     -->
+  </div>
+
+  <div class="captura-banner" id="captura-banner">
+    <h2>Não perca nenhum achado</h2>
+    <p>Deixa seu e-mail ou WhatsApp aqui que a gente te avisa quando sair oferta boa.</p>
+    <form id="captura-form" class="captura-form" novalidate="">
+      <label class="busca-campo">
+        <input type="text" id="captura-contato" placeholder="Seu e-mail ou WhatsApp" autocomplete="off" required="">
+      </label>
+      <label class="busca-campo">
+        <input type="text" id="captura-nome" placeholder="Nome (opcional)" autocomplete="off">
+      </label>
+      <button type="submit" class="cta">Quero receber <span aria-hidden="true">→</span></button>
+    </form>
+    <div class="captura-feedback" id="captura-feedback" role="status" aria-live="polite"></div>
+  </div>
+
+  <div class="advertiser-banner">
+    <h2>Sua marca pode estar aqui</h2>
+    <p>Alcance quem já está pronto pra comprar — anúncio sempre identificado, nunca misturado aos achados.</p>
+    <a class="cta" href="anuncie.html">Anuncie Aqui <span aria-hidden="true">→</span></a>
   </div>
 
   <footer>

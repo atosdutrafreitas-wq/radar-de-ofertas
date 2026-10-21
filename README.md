@@ -6,7 +6,7 @@ Hospedagem no GitHub Pages, banco no Firebase (Firestore) e automações no GitH
 
 ## Como uma oferta entra no site
 
-1. No `painel.html` (login do dono) você preenche link, preço, foto, nome e categoria e clica em **Adicionar à fila**.
+1. No `painel.html` (login do dono) você preenche link, preço, foto, nome, loja e categoria e clica em **Adicionar à fila**. Se souber o **preço original**, preencha também: o site mostra o preço riscado e o desconto (ex.: -30%). O desconto só aparece quando os dois preços são informados. A caixa "Em Alta" coloca a oferta no filtro Em Alta.
 2. A Action `Processar fila de ofertas` roda a cada 15 minutos, publica o card no `index.html`, gera o guia no blog e, se configurado, avisa no Telegram.
 3. A oferta fica em destaque por **48 horas**. Depois passa para a seção **Publicadas recentemente** (com aviso de que o preço pode ter mudado) e sai do site após **30 dias**.
 
